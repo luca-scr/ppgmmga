@@ -1,0 +1,9 @@
+aux$
+log$
+^\.Rproj\.user$
+^.*\.Rproj$
+^Makefile$
+misc/
+revdep/
+.DS_Store
+^revdep$

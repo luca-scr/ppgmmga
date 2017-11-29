@@ -1,0 +1,34 @@
+useDynLib(ppgmmga, .registration = TRUE)
+
+#exportPattern("^[[:alpha:]]+")
+#importFrom("Rcpp", evalCpp)
+importFrom("Rcpp", sourceCpp)
+#import("RcppArmadillo")
+import("mclust", "GA", "ggplot2", "ggthemes","rrcov","geometry")
+
+export(ppgmmga, print.ppgmmga, summary.ppgmmga,
+       print.summary.ppgmmga, plot.ppgmmga)
+
+export(ppgmmgaAD, print.ppgmmgaAD, summary.ppgmmgaAD, print.summary.ppgmmgaAD, plot.ppgmmgaAD)
+
+
+S3method("print", "ppgmmga")
+S3method("summary", "ppgmmga")
+S3method("print", "summary.ppgmmga")
+S3method("plot", "ppgmmga")
+
+S3method("print", "ppgmmgaAD")
+S3method("summary", "ppgmmgaAD")
+S3method("print", "summary.ppgmmgaAD")
+S3method("plot", "ppgmmgaAD")
+
+## Options
+#export(.ppgmmga.default,.ppgmm.plot.default)
+export(ppgmmga.options, ppgmmga.option.restore)
+#export(ppgmmga.plot.options)
+
+## Functions
+export(EntropyGMM)
+export(NegentropyGMM)
+export(volume)
+export(encodeBasis)
