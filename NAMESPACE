@@ -32,3 +32,4 @@ export(EntropyGMM)
 export(NegentropyGMM)
 export(volume)
 export(encodeBasis)
+
