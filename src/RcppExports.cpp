@@ -133,21 +133,3 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-
-static const R_CallMethodDef CallEntries[] = {
-    {"_ppgmmga_EntropyVAR", (DL_FUNC) &_ppgmmga_EntropyVAR, 5},
-    {"_ppgmmga_EntropyUT", (DL_FUNC) &_ppgmmga_EntropyUT, 5},
-    {"_ppgmmga_EntropySOTE", (DL_FUNC) &_ppgmmga_EntropySOTE, 5},
-    {"_ppgmmga_Sim", (DL_FUNC) &_ppgmmga_Sim, 6},
-    {"_ppgmmga_LinTransf", (DL_FUNC) &_ppgmmga_LinTransf, 6},
-    {"_ppgmmga_EntropyGauss", (DL_FUNC) &_ppgmmga_EntropyGauss, 2},
-    {"_ppgmmga_orth", (DL_FUNC) &_ppgmmga_orth, 3},
-    {"_ppgmmga_encode", (DL_FUNC) &_ppgmmga_encode, 2},
-    {"_ppgmmga_encodebasis", (DL_FUNC) &_ppgmmga_encodebasis, 3},
-    {NULL, NULL, 0}
-};
-
-RcppExport void R_init_ppgmmga(DllInfo *dll) {
-    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-    R_useDynamicSymbols(dll, FALSE);
-}
