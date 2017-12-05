@@ -9,21 +9,18 @@ ppgmmgaAD <- function(data,
                        scale = FALSE,
                        gmm = NULL,
                        gatype = c("ga","gaisl"),
-                       nSub = NULL,
                        cutoff = 0.975,
                        noiseInit = NULL,
                        alpha = 0.5,
                        projData = NULL,
-                       basis = NULL,
                        opt = list(),
-                       ...)
+                       monitor = TRUE, ...)
 
 {
 
   call <- match.call()
 
   volumeMethod <- match.arg(volumeMethod, choices = eval(formals(ppgmmgaAD)$volumeMethod))
-  method <- match.arg(method, choices = eval(formals(ppgmmgaAD)$method))
   gatype <- match.arg(gatype, choices = eval(formals(ppgmmgaAD)$gatype))
   approx <- match.arg(approx, choices = eval(formals(ppgmmgaAD)$approx))
 
@@ -45,7 +42,7 @@ ppgmmgaAD <- function(data,
                      gatype = gatype,
                      opt = opt,
                      projData = NULL,
-                     basis = NULL,
+                     monitor = monitor,
                      ...)
 
 
@@ -76,7 +73,7 @@ ppgmmga.out <- function(data,
                         gatype,
                         opt,
                         projData = NULL,
-                        basis = NULL,
+                        monitor,
                          ...)
 
 {
@@ -89,7 +86,7 @@ ppgmmga.out <- function(data,
 
   if(is.null(projData)){
 
-    pp <- ppgmmga(data = data, d = d,approx = approx ,scale = scale,opt = opt, gmm = gmm, gatype = gatype, ...)
+    pp <- ppgmmga(data = data, d = d,approx = approx ,scale = scale,opt = opt, gmm = gmm, gatype = gatype, monitor = monitor,...)
     Z <- pp$Z
 
   }else{
@@ -100,11 +97,8 @@ ppgmmga.out <- function(data,
 
   if(!is.null(volumeMethod)){
 
-    vol <- volume(Z,
+    V <- volume(Z,
                 method = volumeMethod)
-    V <- vol$volume
-    attributes(V) <- list(method = vol$method, coord = vol$coord)
-
 
   }else{
 
@@ -128,7 +122,7 @@ ppgmmga.out <- function(data,
 
   Noise <- function(data,
                     n,
-                    cutoff = 0.975,
+                    cutoff,
                     alpha)
   {
 

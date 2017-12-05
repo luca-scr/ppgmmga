@@ -47,7 +47,7 @@ ppgmmga.options <- function(...)
     temp[opt.n] <- op
   }
 
-  if (sys.parent() == 0) env <- asNamespace("PPGMMGA") else env <- parent.frame()
+  if (sys.parent() == 0) env <- asNamespace("ppgmmga") else env <- parent.frame()
   assign(".ppgmmga.default", temp, envir = env)
   invisible(temp)
 }
@@ -80,7 +80,7 @@ ppgmmga.option.restore <- function()
   )
 
 
-assign(".ppgmmga.default", restorealg, envir = asNamespace("PPGMMGA"))
+assign(".ppgmmga.default", restorealg, envir = asNamespace("ppgmmga"))
 invisible(restorealg)
 
 }

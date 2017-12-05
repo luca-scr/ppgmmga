@@ -137,7 +137,7 @@ plot.ppgmmgaAD <- function(object,
     switch(attributes(object$GMM$hypvol)$method,
            "ConvHull" = {
              vol <- volume(data = data,method = "ConvHull")
-             dat <- data.convHull(coord = vol$coord, data = data)
+             dat <- data.convHull(coord = attributes(vol)$coord, data = data)
              gg <- gg + geom_line(data = dat,aes(x = x,y = y, group = class))},
 
            "box" = {
@@ -179,8 +179,7 @@ data.box <- function(data)
   points <- as.data.frame(expand.grid(x = xcoord,y = ycoord))
   colnames(points) <- colnames(data)
   vol <- volume(data = points,method = "ConvHull")
-  #V <- vol$volume
-  convHull <- vol$coord
+  convHull <- attributes(vol)$coord
   row <- nrow(convHull)
   convHull <- as.vector(t(convHull))
   dat <- data.frame(matrix(NA,ncol = 3,

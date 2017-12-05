@@ -27,17 +27,17 @@ encodeBasis <- function(par, p, d, orth = TRUE, decomposition = c("QR","SVD"))
 # ENTROPY FOR THE GAUSSIAN MIXTURE MODELS #
 ###########################################
 
-EntropyGMM <- function(pro,
+EntropyGMM <- function(G,
+                       pro,
                        mean,
                        sigma,
-                       G,
                        method = c("UT", "VAR", "SOTE","MC"),
                        nSamples = 1e5)
 {
 
   method <- match.arg(method, choices = eval(formals(EntropyGMM)$method))
 
-  dim(sigma)[1]
+  d <- dim(sigma)[1]
 
   Entropy <- switch(method,
                     "UT" =  EntropyUT(G = G,
@@ -73,10 +73,10 @@ EntropyGMM <- function(pro,
 ############################################
 
 
-NegentropyGMM <- function(pro,
+NegentropyGMM <- function(G,
+                          pro,
                           mean,
                           sigma,
-                          G,
                           sigmaGauss,
                           method = c("UT", "VAR", "SOTE","MC"),
                           nSamples = 1e5)
@@ -128,11 +128,11 @@ NegentropyGMM <- function(pro,
 ###########################################
 
 EntropyMC <- function(G,
-                       pro,
-                       mean,
-                       sigma,
-                       d,
-                       nSample){
+                      pro,
+                      mean,
+                      sigma,
+                      d,
+                      nSample){
 
 
   if(d == 1){
@@ -259,8 +259,9 @@ volume <- function(data,
               "ConvHull" = {conv <- convhulln(data,options = "FA")
               conv$vol})
 
-  out <- list(volume = V, method = method, coord = conv$hull)
-  return(out)
+  #out <- list(volume = V, method = method, coord = conv$hull)
+  attributes(V) <- list(method = method, coord = conv$hull)
+  return(V)
 }
 
 
