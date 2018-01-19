@@ -31,7 +31,7 @@ Possible values are:
 \code{"UT"} \tab for Unscented approximation. \cr
 \code{"VAR"} \tab for Variational approximation. \cr
 \code{"SOTE"} \tab for Second Order Taylor approximation. \cr
-\code{"MC"} \tab Monte Carlo approximation. \cr}
+\code{"MC"} \tab Monte Carlo approximation. LS: non sembra essere previsto... \cr}
 }
   \item{center}{
 a logical value set to \emph{TRUE} indicating whther or not the data are centred.}

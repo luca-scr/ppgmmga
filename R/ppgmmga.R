@@ -12,21 +12,19 @@ ppgmmga <- function(data,
 
   call <- match.call()
 
-  if(center == FALSE & scale == FALSE){
-
-    warning("Input data are neither centred nor scaled.")
-
-  }
+  if(center == FALSE & scale == FALSE)
+    { warning("Input data are neither centred nor scaled.") }
+  
   ### User can define its own fitness function (approximation)
-
   approxFun <- approx
 
   if(!is.function(approx))
-  { approx <- match.arg(approx, choices = eval(formals(ppgmmga)$approx))
-  approxFun <- switch(approx,
-                      "UT"   = NegentropyUT,
-                      "SOTE" = NegentropySOTE,
-                      "VAR"  = NegentropyVAR)
+  { 
+    approx <- match.arg(approx, choices = eval(formals(ppgmmga)$approx))
+    approxFun <- switch(approx,
+                        "UT"   = NegentropyUT,
+                        "SOTE" = NegentropySOTE,
+                        "VAR"  = NegentropyVAR)
   }
 
   gatype <- match.arg(gatype, choices = eval(formals(ppgmmga)$gatype))
