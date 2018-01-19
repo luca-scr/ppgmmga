@@ -1,16 +1,17 @@
 \name{ppgmmga.options}
 \alias{ppgmmga.options}
-\docType{data}
+
 \title{
 Default values for \code{ppgmmga} package}
+
 \description{
 Set or retrieve default values for use with \code{ppgmmga} package.
-
 }
-\usage{ppgmmga.options}
+
+\usage{ppgmmga.options(\ldots)}
 
 \details{
-The function assignins values to the \code{ga} function for genetic algorithms, \code{Mclust} function to estimate the Guassima mixture, and to other value in the \code{ppgmmga} function. 
+The function assigns values to the \code{ga} function for genetic algorithms, \code{Mclust} function to estimate the Guassima mixture, and to other value in the \code{ppgmmga} function. 
 
 \describe{
 

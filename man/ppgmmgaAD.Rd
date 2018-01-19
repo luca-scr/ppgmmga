@@ -33,7 +33,7 @@ a \emph{n x p} matrix containing the data with rows correspond to observations a
 an integer vector or value specifying the numbers of mixture components. The default is \emph{G=1:9} and the BIC is computed to select the model.
 }
   \item{modelNames}{
-A string vector or value indicating the covariance model used to fit the mixture with the EM algorithm. See  the help of mclustModelNames for the list of the models available. }
+A string vector or value indicating the covariance model used to fit the mixture with the EM algorithm. See \code{\link[mclust]{mclustModelNames}} for the list of available models.}
   \item{volumeMethod}{
 a string indicating the method to compute the volume of the data.
 Possible values are:

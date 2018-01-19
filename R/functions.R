@@ -4,22 +4,11 @@
 
 encodeBasis <- function(par, p, d, orth = TRUE, decomposition = c("QR","SVD"))
 {
-
-  call <- match.call()
-
-  decomposition <- match.arg(decomposition, choices = eval(formals(encodeBasis)$decomposition))
-
-  if(orth){
-
-    B <- encodebasis(par = par, d = d, p = p)
-    B <- orth(B, MachinedoubleEps = .Machine$double.eps, method = decomposition)
-
-  }else{
-
-    B <- encodebasis(par = par, d = d, p = p)
-
-  }
-
+  decomposition <- match.arg(decomposition, 
+                             choices = eval(formals(encodeBasis)$decomposition))
+  B <- encodebasis(par = par, d = d, p = p)
+  if(orth) 
+    B <- orth(B, method = decomposition)
   return(B)
 }
 
@@ -32,46 +21,45 @@ EntropyGMM <- function(G,
                        mean,
                        sigma,
                        method = c("UT", "VAR", "SOTE","MC"),
-                       nSamples = 1e5)
+                       nsamples = 1e5)
 {
 
   method <- match.arg(method, choices = eval(formals(EntropyGMM)$method))
-
+  sigma <- as.matrix(sigma)
   d <- dim(sigma)[1]
 
   Entropy <- switch(method,
                     "UT" =  EntropyUT(G = G,
-                                  pro = pro,
-                                  mean = mean,
-                                  sigma = sigma,
-                                  d = d),
-                    "VAR" =  EntropyVAR(G = G,
-                                    pro = pro,
-                                    mean = mean,
-                                    sigma= sigma,
-                                    d = d),
-                    "SOTE" =  EntropySOTE(data = mean,
-                                      G = G,
                                       pro = pro,
                                       mean = mean,
-                                      sigma = sigma),
+                                      sigma = sigma,
+                                      d = d),
+                    "VAR" =  EntropyVAR(G = G,
+                                        pro = pro,
+                                        mean = mean,
+                                        sigma= sigma,
+                                        d = d),
+                    "SOTE" =  EntropySOTE(data = mean,
+                                          G = G,
+                                          pro = pro,
+                                          mean = mean,
+                                          sigma = sigma),
                     "MC" =   EntropyMC(G = G,
                                        pro = pro,
                                        mean = mean,
                                        sigma = sigma,
                                        d = d,
-                                       nSample = nSamples)
+                                       nsamples = nsamples)
   )
-
-  attributes(Entropy) <- list(names = names(Entropy),approximation = method)
+  
+  attributes(Entropy) <- list(names = names(Entropy),
+                              approximation = method)
   return(Entropy)
-
 }
 
 ############################################
 # NENTROPY FOR THE GAUSSIAN MIXTURE MODELS #
 ############################################
-
 
 NegentropyGMM <- function(G,
                           pro,
@@ -79,12 +67,12 @@ NegentropyGMM <- function(G,
                           sigma,
                           sigmaGauss,
                           method = c("UT", "VAR", "SOTE","MC"),
-                          nSamples = 1e5)
+                          nsamples = 1e5)
 {
-
-
+  sigma <- as.matrix(sigma)
   d <- dim(sigma)[1]
-  if(d != nrow(sigmaGauss)) {stop("The dimension of GMM and the Gaussian distribution must be equal")}
+  if(d != nrow(sigmaGauss)) 
+    { stop("The dimension of GMM and the Gaussian distribution must be equal") }
   method <- match.arg(method, choices = eval(formals(NegentropyGMM)$method))
 
   Entropy <- switch(method,
@@ -108,19 +96,21 @@ NegentropyGMM <- function(G,
                                        mean = mean,
                                        sigma = sigma,
                                        d = d,
-                                       nSample = nSamples)
+                                       nsamples = nsamples)
   )
 
-  if(method != "MC"){
+  if(method != "MC")
+  {
     Negentropy <- - Entropy[[1]] + EntropyGauss(S = sigmaGauss,d = d)
-  }else{
+  } else
+  {
     Negentropy <- Entropy
     Negentropy[[1]] <- -Entropy[[1]] + EntropyGauss(S = sigmaGauss,d = d)
   }
 
-  attributes(Negentropy) <- list(names = names(Negentropy),approximation = method)
+  attributes(Negentropy) <- list(names = names(Negentropy),
+                                 approximation = method)
   return(Negentropy)
-
 }
 
 ###########################################
@@ -132,36 +122,36 @@ EntropyMC <- function(G,
                       mean,
                       sigma,
                       d,
-                      nSample){
+                      nsamples)
+{
 
-
-  if(d == 1){
+  if(d == 1)
+  {
     par <- list(pro = as.vector(pro),
                 mean = as.matrix(mean),
                 variance = list(modelName = "V",
                                 d = d,
                                 G = G,
                                 sigmasq = sigma))
-    data <- sim("V", parameters = par, n = nSample)[,-1,drop=FALSE]
+    data <- sim("V", parameters = par, n = nsamples)[,-1,drop=FALSE]
 
-  }else{
+  } else
+  {
     par <- list(pro = pro,
                 mean = mean,
                 variance = list(modelName = "VVV",
                                 d = d,
                                 G = G,
                                 sigma = sigma))
-    data <- sim("VVV", parameters = par, n = nSample)[,-1]
-
+    data <- sim("VVV", parameters = par, n = nsamples)[,-1]
   }
 
-  b <-  Sim(data = data,
-            G = par$variance$G,
-            pro = par$pro,
-            mean = par$mean,
-            sigma = par$variance$sigma,
-            S = nSample)
-
+  b <- Sim(data = data,
+           G = par$variance$G,
+           pro = par$pro,
+           mean = par$mean,
+           sigma = par$variance$sigma,
+           S = nsamples)
   return(b)
 }
 
@@ -173,11 +163,11 @@ NegentropyMC <- function(par,
                          GMM,
                          p,
                          d,
-                         nSample = 1e5,
+                         nsamples = 1e5,
                          level = 0.05,
                          decomposition = "QR")
 {
-  B <- orthEncodeBasis(par, p = p, d = d, decomposition = decomposition)
+  B <- encodeBasis(par, p = p, d = d, decomposition = decomposition)
   # Transform estimated parameters to projection subspace
   transfGMM <-  LinTransf(mean = GMM$parameters$mean,
                           sigma = GMM$parameters$variance$sigma,
@@ -205,11 +195,11 @@ NegentropyMC <- function(par,
 
   # Negentropy
   EMC <- EntropyMC(G = GMM$G,
-                    pro = GMM$parameters$pro,
-                    mean = transfGMM$mean,
-                    sigma = transfGMM$sigma,
-                    d = d,
-                    nSample = nSample)
+                   pro = GMM$parameters$pro,
+                   mean = transfGMM$mean,
+                   sigma = transfGMM$sigma,
+                   d = d,
+                   nsamples = nsamples)
 
   z <- qnorm(1-(level/2))
   Negentropy <- - EMC$Entropy + EntropyGauss(S = transfGMM$sz, d = d)
@@ -217,27 +207,56 @@ NegentropyMC <- function(par,
   output <- list(Negentropy = Negentropy,
                  se = EMC$se,
                  confint = c(Negentropy-z*EMC$se, Negentropy+z*EMC$se))
-
   return(output)
 }
+
+###########################################
+#      MONTE CARLO NENTROPY FOR PCA       #
+###########################################
+
+NegentropyPCA <- function(object, d = object$d, nsamples = 1e5)
+{
+  if(!inherits(object, "ppgmmga"))
+    stop("'object' must be of class 'ppgmmga'")
+
+  n <- nrow(object$data)
+  PCA <- prcomp(object$data)
+  B <- as.matrix(PCA$rotation)[,seq(d),drop=FALSE]
+  transfGMM <-  ppgmmga:::LinTransf(mean = object$GMM$parameters$mean,
+                                    sigma = object$GMM$parameters$variance$sigma,
+                                    B = B,
+                                    Z = object$GMM$data,
+                                    G = object$GMM$G,
+                                    d = d)
+  EMC <- EntropyMC(G = object$GMM$G, 
+                   pro = object$GMM$parameters$pro,
+                   mean = transfGMM$mean,
+                   sigma = transfGMM$sigma,
+                   d = d,
+                   nsamples = nsamples)
+  Negentropy <- -EMC$Entropy + EntropyGauss(S = transfGMM$sz, d = d)
+  
+  PCA$Negentropy <- Negentropy
+  PCA$se <- EMC$se
+  return(PCA)
+}
+
+
 
 
 ###########################################
 #        VOLUME OF THE DATA              #
 ###########################################
 
-volume <- function(data,
-                   method = c("box", "pc","ConvHull"))
-
-
+volume <- function(data, 
+                   method = c("box", "pc", "ConvHull"))
 {
 
+  data <- as.matrix(data)
   dim <- dim(data)
   n <- dim[1]
   d <- dim[2]
-
   method <- match.arg(method, choices = eval(formals(volume)$method))
-
 
   # if((n > 5000 | d > 5) & method == "ConvHull" )
   # {
@@ -247,22 +266,20 @@ volume <- function(data,
   #
   # }
 
-  sumlogdifcol <- function(x) sum(log(apply(x, 2, function(colm) diff(range(colm)))))
+  sumlogdifcol <- function(x) 
+    sum(log(apply(x, 2, function(colm) diff(range(colm)))))
 
+  conv <- NULL
   V <- switch(method,
-              "box" = {
-                conv <-  NULL
-                exp(sumlogdifcol(data))},
-              "pc" = {
-                conv <- NULL
-                exp(sumlogdifcol(princomp(data)$scores))},
-              "ConvHull" = {conv <- convhulln(data,options = "FA")
-              conv$vol})
+              "box" = { exp(sumlogdifcol(data)) },
+              "pc" =  { exp(sumlogdifcol(princomp(data)$scores)) },
+              "ConvHull" = { conv <- convhulln(data,options = "FA")
+                             conv$vol } 
+              # TODO: LS è caricato il pacchetto per convhulln?
+             )
 
   #out <- list(volume = V, method = method, coord = conv$hull)
   attributes(V) <- list(method = method, coord = conv$hull)
   return(V)
 }
-
-
 

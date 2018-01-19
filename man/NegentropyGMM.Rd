@@ -13,7 +13,7 @@ NegentropyGMM(G,
               sigma, 
               sigmaGauss, 
               method = c("UT", "VAR", "SOTE", "MC"), 
-              nSamples = 1e+05)
+              nsamples = 1e+05)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -45,7 +45,7 @@ Possible values are:
 \code{"MC"} \tab Monte Carlo approximation. \cr
 }
 The default is "UT".}
-  \item{nSamples}{
+  \item{nsamples}{
 The sample size for the \code{"MC"} method.}
 }
 

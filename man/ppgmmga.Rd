@@ -1,10 +1,16 @@
 \name{ppgmmga}
 \alias{ppgmmga}
+\alias{print.ppgmmga}
 
 \title{
 Projection pursuit based on Gaussian mixtures and evolutionary algorithms for data visualisation}
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
+
+TODO: quasi sempre non usare \verb{\emph} ma \verb{\code} \cr
+Vedi \url{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Marking-text}
+e più in generale 
+\url{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Writing-R-documentation-files}
 }
 \usage{
 ppgmmga(data, 
@@ -31,12 +37,15 @@ Possible values are:
 \code{"UT"} \tab for Unscented approximation. \cr
 \code{"VAR"} \tab for Variational approximation. \cr
 \code{"SOTE"} \tab for Second Order Taylor approximation. \cr
-\code{"MC"} \tab Monte Carlo approximation. \cr}
+\code{"MC"} \tab Monte Carlo approximation. LS: non sembra essere previsto... \cr}
 }
   \item{center}{
-a logical value set to \emph{TRUE} indicating whther or not the data are centred.}
+a logical value set to \emph{TRUE} indicating whther or not the data are centred.
+\verb{LS: potrebbe aver senso passare un vettore di medie da usare in scale ?}
+}
   \item{scale}{
 a logical value set to \emph{FALSE} indicating whther or not the data are scaled.
+\verb{LS: potrebbe aver senso passare un vettore di std dev da usare in scale ?}
 }
   \item{gmm}{
 %%     ~~Describe \code{gmm} here~~
@@ -95,24 +104,28 @@ Scrucca L. \email{luca.scrucca@unipg.it}
 }
 \examples{
 data(iris)
-X = iris[,-5]
+X <- iris[,1:4]
+Class <- iris$Species
 
 # Unscented Transformation
-pp = ppgmmga(data = X, d = 2, approx = "UT")
+PPGMMGA1 <- ppgmmga(data = X, d = 2, approx = "UT")  # default
+summary(PPGMMGA1, check = TRUE)
+plot(PPGMMGA1, Class)
 
+\dontrun{
 # Variational approximation
-pp = ppgmmga(data = X, d = 2, approx = "VAR")
+PPGMMGA2 <- ppgmmga(data = X, d = 2, approx = "VAR")
+summary(PPGMMGA2, check = TRUE)
 
+# Second order Taylor approximation
+PPGMMGA3 <- ppgmmga(data = X, d = 2, approx = "SOTE")
+summary(PPGMMGA3, check = TRUE)
 
-# Second order approximation
-pp = ppgmmga(data = X, d = 2, approx = "SOTE")
-
-# Example changing the size of the initial population in the general options
-
-pp = ppgmmga(data = X, d = 2, opt = list("popSize" = 10))
-
-
+# Changing the size of the initial population in the general options
+PPGMMGA1 <- ppgmmga(data = X, d = 2, opt = list("popSize" = 10))
 }
+}
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")

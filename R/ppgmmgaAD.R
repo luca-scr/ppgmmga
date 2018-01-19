@@ -1,20 +1,20 @@
 
 ppgmmgaAD <- function(data,
-                       G = NULL,
-                       modelNames = NULL,
-                       volumeMethod = c("box", "pc","ConvHull"),
-                       d = 2,
-                       approx = c("UT", "VAR", "SOTE"),
-                       center = TRUE,
-                       scale = FALSE,
-                       gmm = NULL,
-                       gatype = c("ga","gaisl"),
-                       cutoff = 0.975,
-                       noiseInit = NULL,
-                       alpha = 0.5,
-                       projData = NULL,
-                       opt = list(),
-                       monitor = TRUE, ...)
+                      G = NULL,
+                      modelNames = NULL,
+                      volumeMethod = c("box", "pc","ConvHull"),
+                      d = 2,
+                      approx = c("UT", "VAR", "SOTE"),
+                      center = TRUE,
+                      scale = FALSE,
+                      gmm = NULL,
+                      gatype = c("ga","gaisl"),
+                      cutoff = 0.975,
+                      noiseInit = NULL,
+                      alpha = 0.5,
+                      projData = NULL,
+                      opt = list(),
+                      seed = NULL, ...)
 
 {
 
@@ -42,7 +42,7 @@ ppgmmgaAD <- function(data,
                      gatype = gatype,
                      opt = opt,
                      projData = NULL,
-                     monitor = monitor,
+                     seed = seed,
                      ...)
 
 
@@ -60,21 +60,21 @@ ppgmmgaAD <- function(data,
 
 ppgmmga.out <- function(data,
                         approx,
-                         d,
-                         center,
-                         scale,
-                         volumeMethod,
-                         G,
-                         modelNames,
-                         noiseInit,
-                         cutoff,
-                         alpha,
+                        d,
+                        center,
+                        scale,
+                        volumeMethod,
+                        G,
+                        modelNames,
+                        noiseInit,
+                        cutoff,
+                        alpha,
                         gmm,
                         gatype,
                         opt,
                         projData = NULL,
-                        monitor,
-                         ...)
+                        seed = NULL,
+                        ...)
 
 {
 
@@ -86,7 +86,10 @@ ppgmmga.out <- function(data,
 
   if(is.null(projData)){
 
-    pp <- ppgmmga(data = data, d = d,approx = approx ,scale = scale,opt = opt, gmm = gmm, gatype = gatype, monitor = monitor,...)
+    pp <- ppgmmga(data = data, d = d, approx = approx,
+                  center = center, scale = scale, opt = opt, 
+                  gmm = gmm, gatype = gatype, 
+                  seed = seed,...)
     Z <- pp$Z
 
   }else{

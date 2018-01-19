@@ -1,6 +1,6 @@
 Package: ppgmmga
 Version: 1.0
-Date: 2017-11-29
+Date: 2018-01-28
 Title: Projection pursuit based on Gaussian mixtures and evolutionary
         algorithms for data visualisation and anomaly detection
 Description: Projection pursuit procedure for dimension reduction and anomaly detection based on Gaussian Mixture Models and Genetic Algorithms. The density of the original data is estimated via EM algorithm and an approximation of the Negentropy index is maximized via Genetics Algorithms. The algorithm by default use a Hybrid-GA, but parallelisation is also available as master-slave parallelisation and coarse-grain islands approach. For the anomaly detection a GMMs with uniform  noise is estimated after projecting the data in a lower dimensional space using the PPGMMGA procedure.
@@ -9,8 +9,9 @@ Authors@R: c(person("Alessio", "Serafini", role = c("aut", "cre"),
              person("Luca", "Scrucca", role = c("aut"),
                     email = "luca.scrucca@unipg.it"))
 Depends: R (>= 3.0)
-Imports: Rcpp (>= 0.12.5), mclust (>= 5.0), GA (>= 3.0), ggplot2 (>=
-        2.2.1), ggthemes (>= 3.4.0), rrcov (>= 1.4), geometry (>= 0.3)
+Imports: Rcpp (>= 0.12.5), mclust (>= 5.0), GA (>= 3.1), 
+         ggplot2 (>= 2.2.1), ggthemes (>= 3.4.0), 
+         rrcov (>= 1.4), geometry (>= 0.3)
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7)
 License: GPL (>= 2)
 URL: https://www.serafinialessio.it/, http://www.stat.unipg.it/luca/
