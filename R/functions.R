@@ -4,22 +4,11 @@
 
 encodeBasis <- function(par, p, d, orth = TRUE, decomposition = c("QR","SVD"))
 {
-
-  call <- match.call()
-
-  decomposition <- match.arg(decomposition, choices = eval(formals(encodeBasis)$decomposition))
-
-  if(orth){
-
-    B <- encodebasis(par = par, d = d, p = p)
-    B <- orth(B, MachinedoubleEps = .Machine$double.eps, method = decomposition)
-
-  }else{
-
-    B <- encodebasis(par = par, d = d, p = p)
-
-  }
-
+  decomposition <- match.arg(decomposition, 
+                             choices = eval(formals(encodeBasis)$decomposition))
+  B <- encodebasis(par = par, d = d, p = p)
+  if(orth) 
+    B <- orth(B, method = decomposition)
   return(B)
 }
 
@@ -36,25 +25,25 @@ EntropyGMM <- function(G,
 {
 
   method <- match.arg(method, choices = eval(formals(EntropyGMM)$method))
-
+  sigma <- as.matrix(sigma)
   d <- dim(sigma)[1]
 
   Entropy <- switch(method,
                     "UT" =  EntropyUT(G = G,
-                                  pro = pro,
-                                  mean = mean,
-                                  sigma = sigma,
-                                  d = d),
-                    "VAR" =  EntropyVAR(G = G,
-                                    pro = pro,
-                                    mean = mean,
-                                    sigma= sigma,
-                                    d = d),
-                    "SOTE" =  EntropySOTE(data = mean,
-                                      G = G,
                                       pro = pro,
                                       mean = mean,
-                                      sigma = sigma),
+                                      sigma = sigma,
+                                      d = d),
+                    "VAR" =  EntropyVAR(G = G,
+                                        pro = pro,
+                                        mean = mean,
+                                        sigma= sigma,
+                                        d = d),
+                    "SOTE" =  EntropySOTE(data = mean,
+                                          G = G,
+                                          pro = pro,
+                                          mean = mean,
+                                          sigma = sigma),
                     "MC" =   EntropyMC(G = G,
                                        pro = pro,
                                        mean = mean,
@@ -62,16 +51,15 @@ EntropyGMM <- function(G,
                                        d = d,
                                        nSample = nSamples)
   )
-
-  attributes(Entropy) <- list(names = names(Entropy),approximation = method)
+  
+  attributes(Entropy) <- list(names = names(Entropy),
+                              approximation = method)
   return(Entropy)
-
 }
 
 ############################################
 # NENTROPY FOR THE GAUSSIAN MIXTURE MODELS #
 ############################################
-
 
 NegentropyGMM <- function(G,
                           pro,
@@ -81,10 +69,10 @@ NegentropyGMM <- function(G,
                           method = c("UT", "VAR", "SOTE","MC"),
                           nSamples = 1e5)
 {
-
-
+  sigma <- as.matrix(sigma)
   d <- dim(sigma)[1]
-  if(d != nrow(sigmaGauss)) {stop("The dimension of GMM and the Gaussian distribution must be equal")}
+  if(d != nrow(sigmaGauss)) 
+    { stop("The dimension of GMM and the Gaussian distribution must be equal") }
   method <- match.arg(method, choices = eval(formals(NegentropyGMM)$method))
 
   Entropy <- switch(method,
@@ -111,16 +99,18 @@ NegentropyGMM <- function(G,
                                        nSample = nSamples)
   )
 
-  if(method != "MC"){
+  if(method != "MC")
+  {
     Negentropy <- - Entropy[[1]] + EntropyGauss(S = sigmaGauss,d = d)
-  }else{
+  } else
+  {
     Negentropy <- Entropy
     Negentropy[[1]] <- -Entropy[[1]] + EntropyGauss(S = sigmaGauss,d = d)
   }
 
-  attributes(Negentropy) <- list(names = names(Negentropy),approximation = method)
+  attributes(Negentropy) <- list(names = names(Negentropy),
+                                 approximation = method)
   return(Negentropy)
-
 }
 
 ###########################################
@@ -132,10 +122,11 @@ EntropyMC <- function(G,
                       mean,
                       sigma,
                       d,
-                      nSample){
+                      nSample)
+{
 
-
-  if(d == 1){
+  if(d == 1)
+  {
     par <- list(pro = as.vector(pro),
                 mean = as.matrix(mean),
                 variance = list(modelName = "V",
@@ -144,7 +135,8 @@ EntropyMC <- function(G,
                                 sigmasq = sigma))
     data <- sim("V", parameters = par, n = nSample)[,-1,drop=FALSE]
 
-  }else{
+  } else
+  {
     par <- list(pro = pro,
                 mean = mean,
                 variance = list(modelName = "VVV",
@@ -152,16 +144,14 @@ EntropyMC <- function(G,
                                 G = G,
                                 sigma = sigma))
     data <- sim("VVV", parameters = par, n = nSample)[,-1]
-
   }
 
-  b <-  Sim(data = data,
-            G = par$variance$G,
-            pro = par$pro,
-            mean = par$mean,
-            sigma = par$variance$sigma,
-            S = nSample)
-
+  b <- Sim(data = data,
+           G = par$variance$G,
+           pro = par$pro,
+           mean = par$mean,
+           sigma = par$variance$sigma,
+           S = nSample)
   return(b)
 }
 
@@ -177,7 +167,7 @@ NegentropyMC <- function(par,
                          level = 0.05,
                          decomposition = "QR")
 {
-  B <- orthEncodeBasis(par, p = p, d = d, decomposition = decomposition)
+  B <- encodeBasis(par, p = p, d = d, decomposition = decomposition)
   # Transform estimated parameters to projection subspace
   transfGMM <-  LinTransf(mean = GMM$parameters$mean,
                           sigma = GMM$parameters$variance$sigma,
@@ -217,7 +207,6 @@ NegentropyMC <- function(par,
   output <- list(Negentropy = Negentropy,
                  se = EMC$se,
                  confint = c(Negentropy-z*EMC$se, Negentropy+z*EMC$se))
-
   return(output)
 }
 
@@ -226,18 +215,15 @@ NegentropyMC <- function(par,
 #        VOLUME OF THE DATA              #
 ###########################################
 
-volume <- function(data,
-                   method = c("box", "pc","ConvHull"))
-
-
+volume <- function(data, 
+                   method = c("box", "pc", "ConvHull"))
 {
 
+  data <- as.matrix(data)
   dim <- dim(data)
   n <- dim[1]
   d <- dim[2]
-
   method <- match.arg(method, choices = eval(formals(volume)$method))
-
 
   # if((n > 5000 | d > 5) & method == "ConvHull" )
   # {
@@ -247,22 +233,19 @@ volume <- function(data,
   #
   # }
 
-  sumlogdifcol <- function(x) sum(log(apply(x, 2, function(colm) diff(range(colm)))))
+  sumlogdifcol <- function(x) 
+    sum(log(apply(x, 2, function(colm) diff(range(colm)))))
 
+  conv <- NULL
   V <- switch(method,
-              "box" = {
-                conv <-  NULL
-                exp(sumlogdifcol(data))},
-              "pc" = {
-                conv <- NULL
-                exp(sumlogdifcol(princomp(data)$scores))},
-              "ConvHull" = {conv <- convhulln(data,options = "FA")
-              conv$vol})
+              "box" = { exp(sumlogdifcol(data)) },
+              "pc" =  { exp(sumlogdifcol(princomp(data)$scores)) },
+              "ConvHull" = { conv <- convhulln(data,options = "FA")
+                             conv$vol }
+             )
 
   #out <- list(volume = V, method = method, coord = conv$hull)
   attributes(V) <- list(method = method, coord = conv$hull)
   return(V)
 }
-
-
 

@@ -19,7 +19,7 @@ extern SEXP _ppgmmga_EntropySOTE(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _ppgmmga_EntropyUT(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _ppgmmga_EntropyVAR(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _ppgmmga_LinTransf(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP _ppgmmga_orth(SEXP, SEXP, SEXP);
+extern SEXP _ppgmmga_orth(SEXP, SEXP);
 extern SEXP _ppgmmga_Sim(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -30,7 +30,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ppgmmga_EntropyUT",    (DL_FUNC) &_ppgmmga_EntropyUT,    5},
     {"_ppgmmga_EntropyVAR",   (DL_FUNC) &_ppgmmga_EntropyVAR,   5},
     {"_ppgmmga_LinTransf",    (DL_FUNC) &_ppgmmga_LinTransf,    6},
-    {"_ppgmmga_orth",         (DL_FUNC) &_ppgmmga_orth,         3},
+    {"_ppgmmga_orth",         (DL_FUNC) &_ppgmmga_orth,         2},
     {"_ppgmmga_Sim",          (DL_FUNC) &_ppgmmga_Sim,          6},
     {NULL, NULL, 0}
 };

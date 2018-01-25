@@ -3,9 +3,8 @@ NegentropyUT <- function(par, gmm, p, d, decomposition)
 {
 
   # Encode orthonormal basis
-  #B <- encodeBasis(par, p = p, d = d, decomposition = decomposition)
   B <- encodebasis(par = par, d = d, p = p)
-  B <- orth(B, MachinedoubleEps = .Machine$double.eps, method = decomposition)
+  B <- orth(B, method = decomposition)
   # Transform estimated parameters to projection subspace
   transfGMM <-  LinTransf(mean = gmm$parameters$mean,
                           sigma = gmm$parameters$variance$sigma,
@@ -28,9 +27,9 @@ NegentropyVAR <- function(par, gmm, p, d, decomposition)
 {
 
   # Encode orthonormal basis
-  #B <- encodeBasis(par, p = p, d = d, decomposition = decomposition)
   B <- encodebasis(par = par, d = d, p = p)
-  B <- orth(B, MachinedoubleEps = .Machine$double.eps, method = decomposition)  # Transform estimated parameters to projection subspace
+  B <- orth(B, method = decomposition)  
+  # Transform estimated parameters to projection subspace
   transfGMM <-  LinTransf(mean = gmm$parameters$mean,
                           sigma = gmm$parameters$variance$sigma,
                           B = B,
@@ -39,10 +38,11 @@ NegentropyVAR <- function(par, gmm, p, d, decomposition)
                           d = d)
   # Negentropy
   Negentropy <- -EntropyVAR(G = gmm$G,
-                        pro = gmm$parameters$pro,
-                        mean = transfGMM$mean,
-                        sigma= transfGMM$sigma,
-                        d = d) + EntropyGauss(S = transfGMM$sz, d = d)
+                            pro = gmm$parameters$pro,
+                            mean = transfGMM$mean,
+                            sigma= transfGMM$sigma,
+                            d = d) + 
+                 EntropyGauss(S = transfGMM$sz, d = d)
 
   return(Negentropy)
 }
@@ -51,9 +51,8 @@ NegentropyVAR <- function(par, gmm, p, d, decomposition)
 NegentropySOTE <- function(par, gmm, d, p, decomposition)
 {
   # Encode orthonormal basis
-  #B <- encodeBasis(par, p = p, d = d, decomposition = decomposition)
   B <- encodebasis(par = par, d = d, p = p)
-  B <- orth(B, MachinedoubleEps = .Machine$double.eps, method = decomposition)
+  B <- orth(B, method = decomposition)
   # Transform estimated parameters to projection subspace
   transfGMM <-  LinTransf(mean = gmm$parameters$mean,
                           sigma = gmm$parameters$variance$sigma,
@@ -71,6 +70,3 @@ NegentropySOTE <- function(par, gmm, d, p, decomposition)
 
   return(Negentropy)
 }
-
-
-

@@ -1,6 +1,6 @@
 
 
-.ppgmmga.default = list("Orth" = "QR",
+.ppgmmga.default = list("orth" = "QR",
                         "popSize" = 100,
                         "pcr" = 0.8,
                         "pm" = 0.1,
@@ -20,7 +20,7 @@
                         "fnscale" = -1,
                         "maxit" = 100,
                         "initMclust" = "SVD",
-                        "ModelNames" = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EEV", "VEV", "EVV", "VVV","VEE"),
+                        "modelNames" = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EEV", "VEV", "EVV", "VVV","VEE"),
                         "G" = 1:9
 
 )
@@ -54,7 +54,7 @@ ppgmmga.options <- function(...)
 
 ppgmmga.option.restore <- function()
 {
-  restorealg <- list("Orth" = "QR",
+  restorealg <- list("orth" = "QR",
                      "popSize" = 100,
                      "pcr" = 0.8,
                      "pm" = 0.1,
@@ -74,7 +74,7 @@ ppgmmga.option.restore <- function()
                      "fnscale" = -1,
                      "maxit" = 100,
                      "initMclust" = "SVD",
-                     "ModelNames" = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EEV", "VEV", "EVV", "VVV","VEE"),
+                     "modelNames" = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EEV", "VEV", "EVV", "VVV","VEE"),
                      "G" = 1:9
 
   )

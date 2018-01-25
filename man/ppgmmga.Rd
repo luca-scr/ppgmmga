@@ -5,6 +5,11 @@
 Projection pursuit based on Gaussian mixtures and evolutionary algorithms for data visualisation}
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
+
+TODO: quasi sempre non usare \verb{\emph} ma \verb{\code} \cr
+Vedi \url{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Marking-text}
+e più in generale 
+\url{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Writing-R-documentation-files}
 }
 \usage{
 ppgmmga(data, 
@@ -34,9 +39,12 @@ Possible values are:
 \code{"MC"} \tab Monte Carlo approximation. LS: non sembra essere previsto... \cr}
 }
   \item{center}{
-a logical value set to \emph{TRUE} indicating whther or not the data are centred.}
+a logical value set to \emph{TRUE} indicating whther or not the data are centred.
+\verb{LS: potrebbe aver senso passare un vettore di medie da usare in scale ?}
+}
   \item{scale}{
 a logical value set to \emph{FALSE} indicating whther or not the data are scaled.
+\verb{LS: potrebbe aver senso passare un vettore di std dev da usare in scale ?}
 }
   \item{gmm}{
 %%     ~~Describe \code{gmm} here~~

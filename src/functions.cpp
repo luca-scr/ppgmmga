@@ -55,9 +55,10 @@ double EntropyGauss(arma::mat S, int d){
 
 
 // [[Rcpp::export]]
-arma::mat orth(arma::mat A, double MachinedoubleEps, std::string method = "QR")
+arma::mat orth(arma::mat A, std::string method = "QR")
 {
 
+  double    eps = std::numeric_limits<double>::epsilon();
   arma::mat B;
 
   if(method == "SVD"){
@@ -83,11 +84,9 @@ arma::mat orth(arma::mat A, double MachinedoubleEps, std::string method = "QR")
     double m1 = std::max(m,n);
     double m2 = arma::max(s);
 
-    tol = m1 * m2 * MachinedoubleEps;
-
+    tol = m1 * m2 * eps;
 
     r = sum(s > tol) - 1;
-
 
     //Rcout << U.col(0) << "\n";
 

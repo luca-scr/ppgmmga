@@ -96,15 +96,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // orth
-arma::mat orth(arma::mat A, double MachinedoubleEps, std::string method);
-RcppExport SEXP _ppgmmga_orth(SEXP ASEXP, SEXP MachinedoubleEpsSEXP, SEXP methodSEXP) {
+arma::mat orth(arma::mat A, std::string method);
+RcppExport SEXP _ppgmmga_orth(SEXP ASEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    Rcpp::traits::input_parameter< double >::type MachinedoubleEps(MachinedoubleEpsSEXP);
     Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(orth(A, MachinedoubleEps, method));
+    rcpp_result_gen = Rcpp::wrap(orth(A, method));
     return rcpp_result_gen;
 END_RCPP
 }

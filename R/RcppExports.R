@@ -25,8 +25,8 @@ EntropyGauss <- function(S, d) {
     .Call(`_ppgmmga_EntropyGauss`, S, d)
 }
 
-orth <- function(A, MachinedoubleEps, method = "QR") {
-    .Call(`_ppgmmga_orth`, A, MachinedoubleEps, method)
+orth <- function(A, method = "QR") {
+    .Call(`_ppgmmga_orth`, A, method)
 }
 
 encode <- function(par, p) {
