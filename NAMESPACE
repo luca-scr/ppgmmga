@@ -1,22 +1,23 @@
-useDynLib(ppgmmga, .registration = TRUE)
+useDynLib("ppgmmga", .registration = TRUE)
 
 #exportPattern("^[[:alpha:]]+")
 #importFrom("Rcpp", evalCpp)
 importFrom("Rcpp", sourceCpp)
 #import("RcppArmadillo")
-import("mclust", "GA", "ggplot2", "ggthemes","rrcov","geometry")
 
+import("mclust", "GA", "ggplot2", "ggthemes","rrcov","geometry")
+importFrom("grDevices", "nclass.Sturges")
+importFrom("stats", "princomp", "qchisq", "qnorm")
+importFrom("utils", "packageVersion")
+  
 export(ppgmmga, print.ppgmmga, summary.ppgmmga,
        print.summary.ppgmmga, plot.ppgmmga)
-
-export(ppgmmgaAD, print.ppgmmgaAD, summary.ppgmmgaAD, print.summary.ppgmmgaAD, plot.ppgmmgaAD)
-
-
 S3method("print", "ppgmmga")
 S3method("summary", "ppgmmga")
 S3method("print", "summary.ppgmmga")
 S3method("plot", "ppgmmga")
 
+export(ppgmmgaAD, print.ppgmmgaAD, summary.ppgmmgaAD, print.summary.ppgmmgaAD, plot.ppgmmgaAD)
 S3method("print", "ppgmmgaAD")
 S3method("summary", "ppgmmgaAD")
 S3method("print", "summary.ppgmmgaAD")

@@ -1,5 +1,6 @@
 \name{ppgmmga}
 \alias{ppgmmga}
+\alias{print.ppgmmga}
 
 \title{
 Projection pursuit based on Gaussian mixtures and evolutionary algorithms for data visualisation}

@@ -7,15 +7,9 @@ Summary for projection pursuit based on Gaussian mixtures and evolutionary algor
 \description{
 Summary method for class \code{ppgmmga}.}
 \usage{
-
-## S3 method for summary \code{"ppgmmga"} class. 
-summary.ppgmmga(object, 
-                ppgmmgaCheck = FALSE, ...)
+\method{summary}{ppgmmga}(object, ppgmmgaCheck = FALSE, ...)
                 
-## S3 method for print \code{"summary.ppgmmga"} object.
-
-print.summary.ppgmmga(x, digits = getOption("digits"), ...)
-
+\method{print}{summary.ppgmmga}(x, digits = getOption("digits"), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
