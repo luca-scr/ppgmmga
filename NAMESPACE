@@ -29,8 +29,6 @@ export(ppgmmga.options, ppgmmga.option.restore)
 #export(ppgmmga.plot.options)
 
 ## Functions
-export(EntropyGMM)
-export(NegentropyGMM)
-export(volume)
-export(encodeBasis)
+export(EntropyGMM, NegentropyGMM, NegentropyPCA, 
+       volume, encodeBasis)
 

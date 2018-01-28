@@ -21,7 +21,7 @@ EntropyGMM <- function(G,
                        mean,
                        sigma,
                        method = c("UT", "VAR", "SOTE","MC"),
-                       nSamples = 1e5)
+                       nsamples = 1e5)
 {
 
   method <- match.arg(method, choices = eval(formals(EntropyGMM)$method))
@@ -49,7 +49,7 @@ EntropyGMM <- function(G,
                                        mean = mean,
                                        sigma = sigma,
                                        d = d,
-                                       nSample = nSamples)
+                                       nsamples = nsamples)
   )
   
   attributes(Entropy) <- list(names = names(Entropy),
@@ -67,7 +67,7 @@ NegentropyGMM <- function(G,
                           sigma,
                           sigmaGauss,
                           method = c("UT", "VAR", "SOTE","MC"),
-                          nSamples = 1e5)
+                          nsamples = 1e5)
 {
   sigma <- as.matrix(sigma)
   d <- dim(sigma)[1]
@@ -96,7 +96,7 @@ NegentropyGMM <- function(G,
                                        mean = mean,
                                        sigma = sigma,
                                        d = d,
-                                       nSample = nSamples)
+                                       nsamples = nsamples)
   )
 
   if(method != "MC")
@@ -122,7 +122,7 @@ EntropyMC <- function(G,
                       mean,
                       sigma,
                       d,
-                      nSample)
+                      nsamples)
 {
 
   if(d == 1)
@@ -133,7 +133,7 @@ EntropyMC <- function(G,
                                 d = d,
                                 G = G,
                                 sigmasq = sigma))
-    data <- sim("V", parameters = par, n = nSample)[,-1,drop=FALSE]
+    data <- sim("V", parameters = par, n = nsamples)[,-1,drop=FALSE]
 
   } else
   {
@@ -143,7 +143,7 @@ EntropyMC <- function(G,
                                 d = d,
                                 G = G,
                                 sigma = sigma))
-    data <- sim("VVV", parameters = par, n = nSample)[,-1]
+    data <- sim("VVV", parameters = par, n = nsamples)[,-1]
   }
 
   b <- Sim(data = data,
@@ -151,7 +151,7 @@ EntropyMC <- function(G,
            pro = par$pro,
            mean = par$mean,
            sigma = par$variance$sigma,
-           S = nSample)
+           S = nsamples)
   return(b)
 }
 
@@ -163,7 +163,7 @@ NegentropyMC <- function(par,
                          GMM,
                          p,
                          d,
-                         nSample = 1e5,
+                         nsamples = 1e5,
                          level = 0.05,
                          decomposition = "QR")
 {
@@ -195,11 +195,11 @@ NegentropyMC <- function(par,
 
   # Negentropy
   EMC <- EntropyMC(G = GMM$G,
-                    pro = GMM$parameters$pro,
-                    mean = transfGMM$mean,
-                    sigma = transfGMM$sigma,
-                    d = d,
-                    nSample = nSample)
+                   pro = GMM$parameters$pro,
+                   mean = transfGMM$mean,
+                   sigma = transfGMM$sigma,
+                   d = d,
+                   nsamples = nsamples)
 
   z <- qnorm(1-(level/2))
   Negentropy <- - EMC$Entropy + EntropyGauss(S = transfGMM$sz, d = d)
@@ -209,6 +209,39 @@ NegentropyMC <- function(par,
                  confint = c(Negentropy-z*EMC$se, Negentropy+z*EMC$se))
   return(output)
 }
+
+###########################################
+#      MONTE CARLO NENTROPY FOR PCA       #
+###########################################
+
+NegentropyPCA <- function(object, d = object$d, nsamples = 1e5)
+{
+  if(!inherits(object, "ppgmmga"))
+    stop("'object' must be of class 'ppgmmga'")
+
+  n <- nrow(object$data)
+  PCA <- prcomp(object$data)
+  B <- as.matrix(PCA$rotation)[,seq(d),drop=FALSE]
+  transfGMM <-  ppgmmga:::LinTransf(mean = object$GMM$parameters$mean,
+                                    sigma = object$GMM$parameters$variance$sigma,
+                                    B = B,
+                                    Z = object$GMM$data,
+                                    G = object$GMM$G,
+                                    d = d)
+  EMC <- EntropyMC(G = object$GMM$G, 
+                   pro = object$GMM$parameters$pro,
+                   mean = transfGMM$mean,
+                   sigma = transfGMM$sigma,
+                   d = d,
+                   nsamples = nsamples)
+  Negentropy <- -EMC$Entropy + EntropyGauss(S = transfGMM$sz, d = d)
+  
+  PCA$Negentropy <- Negentropy
+  PCA$se <- EMC$se
+  return(PCA)
+}
+
+
 
 
 ###########################################
@@ -241,7 +274,8 @@ volume <- function(data,
               "box" = { exp(sumlogdifcol(data)) },
               "pc" =  { exp(sumlogdifcol(princomp(data)$scores)) },
               "ConvHull" = { conv <- convhulln(data,options = "FA")
-                             conv$vol }
+                             conv$vol } 
+              # TODO: LS è caricato il pacchetto per convhulln?
              )
 
   #out <- list(volume = V, method = method, coord = conv$hull)

@@ -104,24 +104,28 @@ Scrucca L. \email{luca.scrucca@unipg.it}
 }
 \examples{
 data(iris)
-X = iris[,-5]
+X <- iris[,1:4]
+Class <- iris$Species
 
 # Unscented Transformation
-pp = ppgmmga(data = X, d = 2, approx = "UT")
+PPGMMGA1 <- ppgmmga(data = X, d = 2, approx = "UT")  # default
+summary(PPGMMGA1, check = TRUE)
+plot(PPGMMGA1, Class)
 
+\dontrun{
 # Variational approximation
-pp = ppgmmga(data = X, d = 2, approx = "VAR")
+PPGMMGA2 <- ppgmmga(data = X, d = 2, approx = "VAR")
+summary(PPGMMGA2, check = TRUE)
 
+# Second order Taylor approximation
+PPGMMGA3 <- ppgmmga(data = X, d = 2, approx = "SOTE")
+summary(PPGMMGA3, check = TRUE)
 
-# Second order approximation
-pp = ppgmmga(data = X, d = 2, approx = "SOTE")
-
-# Example changing the size of the initial population in the general options
-
-pp = ppgmmga(data = X, d = 2, opt = list("popSize" = 10))
-
-
+# Changing the size of the initial population in the general options
+PPGMMGA1 <- ppgmmga(data = X, d = 2, opt = list("popSize" = 10))
 }
+}
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")

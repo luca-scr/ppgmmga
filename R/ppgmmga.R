@@ -148,7 +148,7 @@ print.ppgmmga <- function(x, ...)
   invisible()
 }
 
-summary.ppgmmga <- function(object, ppgmmgaCheck = FALSE, ...)
+summary.ppgmmga <- function(object, check = FALSE, ...)
 {
   out <- list(approx = object$approx,
               Negentropy = object$Negentropy,
@@ -161,11 +161,8 @@ summary.ppgmmga <- function(object, ppgmmgaCheck = FALSE, ...)
               G = object$GMM$G,
               data = object$data)
 
-  if(ppgmmgaCheck)
-  {
-    MC <- ppgmmgaCheck(object, ...)
-    out <- append(out, list(check = MC))
-  }
+  if(check)
+    { out$check <- NegentropyMCcheck(object, ...) }
 
   class(out) <- "summary.ppgmmga"
   return(out)
@@ -200,11 +197,36 @@ print.summary.ppgmmga <- function(x, digits = getOption("digits"), ...)
   cat("\n")
   cat(paste("Estimated projection basis:","\n"))
   print(x$basis, digits = digits)
-  if(any(names(x)=="check"))
+  
+  if(!is.null(x$check))
   {
     cat(paste("\nMonte Carlo Negentropy approximation check:","\n"))
-    print(x$check, digits = digits)
+    tab <- x$check
+    tab <- t(data.frame(tab[c(2:4,6)], check.names = FALSE))
+    colnames(tab) <- x$check$approx
+    print(tab, digits = digits)
   }
 
   invisible()
+}
+
+NegentropyMCcheck <- function(object, nsamples = 1e5, conf.level = NULL)
+{
+  if(!inherits(object, "ppgmmga"))
+    stop("'object' must be of class 'ppgmmga'")
+  
+  MC <- NegentropyMC(par = object$GA@solution,
+                     GMM = object$GMM,
+                     p = object$GMM$d,
+                     d = object$d,
+                     nsamples = nsamples,
+                     level = 1-conf.level)
+
+  out <- list("approx"            = object$approx,
+              "Approx Negentropy" = object$Negentropy,
+              "MC Negentropy"     = MC$Negentropy, 
+              "MC se"             = MC$se,
+              "MC interval"       = MC$confint,
+              "Relative accuracy" = object$Negentropy/MC$Negentropy)
+  return(out)
 }
