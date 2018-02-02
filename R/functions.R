@@ -137,7 +137,6 @@ EntropyMC <- function(G,
                                 G = G,
                                 sigmasq = sigma))
     simdata <- sim("V", parameters = par, n = nsamples)[,-1,drop=FALSE]
-
   } else
   {
     par <- list(pro = pro,
@@ -158,7 +157,7 @@ EntropyMC <- function(G,
 }
 
 ###########################################
-#         MONTE CARLO NENTROPY           #
+#        MONTE CARLO NEGENTROPY           #
 ###########################################
 
 NegentropyMC <- function(par,
@@ -256,8 +255,8 @@ volume <- function(data,
 
   data <- as.matrix(data)
   dim <- dim(data)
-  n <- dim[1]
-  d <- dim[2]
+  # n <- dim[1]
+  # d <- dim[2]
   method <- match.arg(method, choices = eval(formals(volume)$method))
 
   # if((n > 5000 | d > 5) & method == "ConvHull" )
