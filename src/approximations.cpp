@@ -40,30 +40,30 @@ double KLMN(arma::vec mean1, arma::mat sigma1, arma::vec mean2, arma::mat sigma2
 //  X = data (note that we need a rowvector)                            //
 //  mean = mean   (note that we need a rowvector)                       //
 //  sigma = covariance matrix                                           //
-//  logd  = logical value indicating if p are given as log              //
+//  logd = logical value; if true density is returned in log scale      //
 //////////////////////////////////////////////////////////////////////////
-
 
 const double log2pi = std::log(2.0 * M_PI);
 double dmvnrm(arma::rowvec x,
               arma::rowvec mean,
               arma::mat sigma,
-              bool logd = false) {
-  int n = x.n_elem;
-  int xdim = sigma.n_cols;
-  double out(n);
+              bool logd = false) 
+{
+  int    xdim = sigma.n_cols;
+  // int    n = x.n_elem;
+  // double out(n);
   arma::mat rooti = arma::trans(arma::inv(trimatu(arma::chol(sigma))));
   double rootisum = arma::sum(log(rooti.diag()));
   double constants = -(static_cast<double>(xdim)/2.0) * log2pi;
 
-
   arma::vec z = rooti * arma::trans( x - mean) ;
-  out      = constants - 0.5 * arma::sum(z%z) + rootisum;
+  double    out = constants - 0.5 * arma::sum(z%z) + rootisum;
 
-
-  if (logd == false) {
+  if (logd == false) 
+  {
     out = exp(out);
   }
+  
   return(out);
 }
 
@@ -71,12 +71,10 @@ double dmvnrm(arma::rowvec x,
 //       Logsumexp                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-double logsumexp(arma::vec x) {
-
-  double max= x.max();
-  double lse=0;
-
-  lse = max + log(arma::sum(exp(x-max)));
+double logsumexp(arma::vec x) 
+{
+  double max = x.max();
+  double lse = max + log(arma::sum(exp(x-max)));
   return lse;
 }
 
@@ -96,16 +94,15 @@ double mixLogDensity(arma::rowvec data,
                      int G,
                      arma::vec pro,
                      arma::mat mean,
-                     arma::cube sigma){
+                     arma::cube sigma)
+{
 
-  arma::mat m = mean.t();
+  arma::mat  m = mean.t();
+  arma::vec  dens; dens.zeros(G);
 
-  arma::vec dens; dens.zeros(G);
-
-  for(int i=0; i<G; i++){
-
+  for(int i=0; i<G; i++)
+  {
     dens(i) = log(pro(i)) + dmvnrm(data, m.row(i), sigma.slice(i), true);
-
   }
 
   return logsumexp(dens);
@@ -126,16 +123,15 @@ double mixDensity(arma::rowvec data,
                   int G,
                   arma::vec pro,
                   arma::mat mean,
-                  arma::cube sigma){
+                  arma::cube sigma)
+{
 
   arma::mat m = mean.t();
+  double    dens = 0;
 
-  double dens = 0;
-
-  for(int i=0; i<G; i++){
-
+  for(int i=0; i<G; i++)
+  {
     dens = dens + pro(i) * dmvnrm(data, m.row(i), sigma.slice(i));
-
   }
 
   return dens;
@@ -356,10 +352,10 @@ double EntropySOTE(arma::mat data,
   arma::mat trandata = data.t();
   arma::mat tranmean  = mean.t();
 
-  for(int i=0; i<G; i++){
-
+  for(int i=0; i<G; i++)
+  {
     H = H + pro(i) * mixLogDensity(tranmean.row(i), G, pro, mean, sigma);
-    output = output +  (pro(i)/2) * (accu( F(mean.col(i), G,pro,mean,sigma) % sigma.slice(i)));
+    output = output +  (pro(i)/2) * (accu( F(mean.col(i), G, pro, mean, sigma) % sigma.slice(i)));
   }
 
   return (-H - output);
@@ -453,36 +449,29 @@ double EntropySOTE(arma::mat data,
 // }
 
 
-//[[Rcpp::depends("RcppArmadillo")]]
 //[[Rcpp::export]]
 
-List Sim(arma::mat data,
-         int G,
-         arma::vec pro,
-         arma::mat mean,
-         arma::cube sigma,
-         int S){
+List EntropyMCapprox(arma::mat data,
+                     int G,
+                     arma::vec pro,
+                     arma::mat mean,
+                     arma::cube sigma)
+{
+  int       n = data.n_rows;
+  arma::vec out; out.zeros(n);
+  double    ent;
+  double    se;
 
-
-  arma::vec out; out.zeros(S);
-  double Neg;
-  double se;
-
-  for(int i=0;i<S;i++){
-
-    out(i) = mixLogDensity(data.row(i),
-        G,
-        pro,
-        mean,
-        sigma);
-
+  for(int i=0; i<n; i++)
+  {
+    out(i) = mixLogDensity(data.row(i), G, pro, mean, sigma);
   }
 
-
-  Neg = arma::mean(out);
-  se = sqrt(arma::var(out)/S);
+  ent = -1.0*arma::mean(out);
+  se  = sqrt(arma::var(out)/n);
   //return(arma::var(out,1));
-  return List::create(Rcpp::Named("Entropy") = - Neg,
+  
+  return List::create(Rcpp::Named("Entropy") = ent,
                       Rcpp::Named("se") = se);
 }
 

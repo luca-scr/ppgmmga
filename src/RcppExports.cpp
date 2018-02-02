@@ -51,9 +51,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Sim
-List Sim(arma::mat data, int G, arma::vec pro, arma::mat mean, arma::cube sigma, int S);
-RcppExport SEXP _ppgmmga_Sim(SEXP dataSEXP, SEXP GSEXP, SEXP proSEXP, SEXP meanSEXP, SEXP sigmaSEXP, SEXP SSEXP) {
+// EntropyMCapprox
+List EntropyMCapprox(arma::mat data, int G, arma::vec pro, arma::mat mean, arma::cube sigma);
+RcppExport SEXP _ppgmmga_EntropyMCapprox(SEXP dataSEXP, SEXP GSEXP, SEXP proSEXP, SEXP meanSEXP, SEXP sigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -62,8 +62,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type pro(proSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< arma::cube >::type sigma(sigmaSEXP);
-    Rcpp::traits::input_parameter< int >::type S(SSEXP);
-    rcpp_result_gen = Rcpp::wrap(Sim(data, G, pro, mean, sigma, S));
+    rcpp_result_gen = Rcpp::wrap(EntropyMCapprox(data, G, pro, mean, sigma));
     return rcpp_result_gen;
 END_RCPP
 }

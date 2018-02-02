@@ -16,7 +16,8 @@ encodeBasis <- function(par, p, d, orth = TRUE, decomposition = c("QR","SVD"))
 # ENTROPY FOR THE GAUSSIAN MIXTURE MODELS #
 ###########################################
 
-EntropyGMM <- function(G,
+EntropyGMM <- function(G, 
+                       d,
                        pro,
                        mean,
                        sigma,
@@ -25,8 +26,8 @@ EntropyGMM <- function(G,
 {
 
   method <- match.arg(method, choices = eval(formals(EntropyGMM)$method))
-  sigma <- as.matrix(sigma)
-  d <- dim(sigma)[1]
+  # sigma <- as.matrix(sigma)
+  # d <- dim(sigma)[1]
 
   Entropy <- switch(method,
                     "UT" =  EntropyUT(G = G,
@@ -57,11 +58,12 @@ EntropyGMM <- function(G,
   return(Entropy)
 }
 
-############################################
-# NENTROPY FOR THE GAUSSIAN MIXTURE MODELS #
-############################################
+##############################################
+# NEGENTROPY FOR THE GAUSSIAN MIXTURE MODELS #
+##############################################
 
 NegentropyGMM <- function(G,
+                          d,
                           pro,
                           mean,
                           sigma,
@@ -69,11 +71,12 @@ NegentropyGMM <- function(G,
                           method = c("UT", "VAR", "SOTE","MC"),
                           nsamples = 1e5)
 {
-  sigma <- as.matrix(sigma)
-  d <- dim(sigma)[1]
-  if(d != nrow(sigmaGauss)) 
-    { stop("The dimension of GMM and the Gaussian distribution must be equal") }
-  method <- match.arg(method, choices = eval(formals(NegentropyGMM)$method))
+  # sigma <- as.matrix(sigma)
+  # d <- dim(sigma)[1]
+  method <- match.arg(method, 
+                      choices = eval(formals(NegentropyGMM)$method))
+  if(d != nrow(sigmaGauss) | d != ncol(sigmaGauss))
+    { stop("The dimension of sigmaGauss does not match that of GMM parameters!") }
 
   Entropy <- switch(method,
                     "UT" =  EntropyUT(G = G,
@@ -101,11 +104,11 @@ NegentropyGMM <- function(G,
 
   if(method != "MC")
   {
-    Negentropy <- - Entropy[[1]] + EntropyGauss(S = sigmaGauss,d = d)
+    Negentropy <- - Entropy[[1]] + EntropyGauss(S = sigmaGauss, d = d)
   } else
   {
     Negentropy <- Entropy
-    Negentropy[[1]] <- -Entropy[[1]] + EntropyGauss(S = sigmaGauss,d = d)
+    Negentropy[[1]] <- -Entropy[[1]] + EntropyGauss(S = sigmaGauss, d = d)
   }
 
   attributes(Negentropy) <- list(names = names(Negentropy),
@@ -133,7 +136,7 @@ EntropyMC <- function(G,
                                 d = d,
                                 G = G,
                                 sigmasq = sigma))
-    data <- sim("V", parameters = par, n = nsamples)[,-1,drop=FALSE]
+    simdata <- sim("V", parameters = par, n = nsamples)[,-1,drop=FALSE]
 
   } else
   {
@@ -143,16 +146,15 @@ EntropyMC <- function(G,
                                 d = d,
                                 G = G,
                                 sigma = sigma))
-    data <- sim("VVV", parameters = par, n = nsamples)[,-1]
+    simdata <- sim("VVV", parameters = par, n = nsamples)[,-1]
   }
 
-  b <- Sim(data = data,
-           G = par$variance$G,
-           pro = par$pro,
-           mean = par$mean,
-           sigma = par$variance$sigma,
-           S = nsamples)
-  return(b)
+  h <- EntropyMCapprox(data = simdata,
+                       G = par$variance$G,
+                       pro = par$pro,
+                       mean = par$mean,
+                       sigma = par$variance$sigma)
+  return(h)
 }
 
 ###########################################
@@ -219,15 +221,15 @@ NegentropyPCA <- function(object, d = object$d, nsamples = 1e5)
   if(!inherits(object, "ppgmmga"))
     stop("'object' must be of class 'ppgmmga'")
 
-  n <- nrow(object$data)
+  # n <- nrow(object$data)
   PCA <- prcomp(object$data)
   B <- as.matrix(PCA$rotation)[,seq(d),drop=FALSE]
-  transfGMM <-  ppgmmga:::LinTransf(mean = object$GMM$parameters$mean,
-                                    sigma = object$GMM$parameters$variance$sigma,
-                                    B = B,
-                                    Z = object$GMM$data,
-                                    G = object$GMM$G,
-                                    d = d)
+  transfGMM <-  LinTransf(mean = object$GMM$parameters$mean,
+                          sigma = object$GMM$parameters$variance$sigma,
+                          B = B,
+                          Z = object$GMM$data,
+                          G = object$GMM$G,
+                          d = d)
   EMC <- EntropyMC(G = object$GMM$G, 
                    pro = object$GMM$parameters$pro,
                    mean = transfGMM$mean,

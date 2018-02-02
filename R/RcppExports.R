@@ -13,8 +13,8 @@ EntropySOTE <- function(data, G, pro, mean, sigma) {
     .Call(`_ppgmmga_EntropySOTE`, data, G, pro, mean, sigma)
 }
 
-Sim <- function(data, G, pro, mean, sigma, S) {
-    .Call(`_ppgmmga_Sim`, data, G, pro, mean, sigma, S)
+EntropyMCapprox <- function(data, G, pro, mean, sigma) {
+    .Call(`_ppgmmga_EntropyMCapprox`, data, G, pro, mean, sigma)
 }
 
 LinTransf <- function(mean, sigma, B, Z, G, d) {

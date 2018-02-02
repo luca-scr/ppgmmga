@@ -14,10 +14,11 @@ NegentropyUT <- function(par, gmm, p, d, decomposition)
                           d = d)
   # Negentropy
   Negentropy <-  -EntropyUT(G = gmm$G,
-                        pro = gmm$parameters$pro,
-                        mean = transfGMM$mean ,
-                        sigma = transfGMM$sigma,
-                        d = d) + EntropyGauss(S = transfGMM$sz, d = d)
+                            pro = gmm$parameters$pro,
+                            mean = transfGMM$mean ,
+                            sigma = transfGMM$sigma,
+                            d = d) + 
+                  EntropyGauss(S = transfGMM$sz, d = d)
 
   return(Negentropy)
 }
