@@ -2,7 +2,9 @@
 #     FUNCTION RETURNS THE MATRIX BASIS GIVEN A ENCODED FORM OF THE BASIS            #
 ######################################################################################
 
-encodeBasis <- function(par, p, d, orth = TRUE, decomposition = c("QR","SVD"))
+encodeBasis <- function(par, p, d, 
+                        orth = TRUE, 
+                        decomposition = c("QR","SVD"))
 {
   decomposition <- match.arg(decomposition, 
                              choices = eval(formals(encodeBasis)$decomposition))
@@ -26,8 +28,10 @@ EntropyGMM <- function(G,
 {
 
   method <- match.arg(method, choices = eval(formals(EntropyGMM)$method))
-  # sigma <- as.matrix(sigma)
-  # d <- dim(sigma)[1]
+
+  pro <- as.vector(pro)
+  mean <- as.matrix(mean)
+  if(d == 1) sigma <- array(sigma, c(d,d,G))
 
   Entropy <- switch(method,
                     "UT" =  EntropyUT(G = G,
@@ -71,8 +75,6 @@ NegentropyGMM <- function(G,
                           method = c("UT", "VAR", "SOTE","MC"),
                           nsamples = 1e5)
 {
-  # sigma <- as.matrix(sigma)
-  # d <- dim(sigma)[1]
   method <- match.arg(method, 
                       choices = eval(formals(NegentropyGMM)$method))
   if(d != nrow(sigmaGauss) | d != ncol(sigmaGauss))
@@ -139,8 +141,8 @@ EntropyMC <- function(G,
     simdata <- sim("V", parameters = par, n = nsamples)[,-1,drop=FALSE]
   } else
   {
-    par <- list(pro = pro,
-                mean = mean,
+    par <- list(pro = as.vector(pro),
+                mean = as.matrix(mean),
                 variance = list(modelName = "VVV",
                                 d = d,
                                 G = G,
