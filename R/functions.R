@@ -264,42 +264,4 @@ NegentropyPCA <- function(object, d = object$d, nsamples = 1e5)
 
 
 
-###########################################
-#        VOLUME OF THE DATA              #
-###########################################
-
-volume <- function(data, 
-                   method = c("box", "pc", "ConvHull"))
-{
-
-  data <- as.matrix(data)
-  dim <- dim(data)
-  # n <- dim[1]
-  # d <- dim[2]
-  method <- match.arg(method, choices = eval(formals(volume)$method))
-
-  # if((n > 5000 | d > 5) & method == "ConvHull" )
-  # {
-  #
-  #   method = "box"
-  #   warning("The Convex Hull method is not available for dataset with dimension bigger than 5 or number of observation bigger that 2000. The box method is used.")
-  #
-  # }
-
-  sumlogdifcol <- function(x) 
-    sum(log(apply(x, 2, function(colm) diff(range(colm)))))
-
-  conv <- NULL
-  V <- switch(method,
-              "box" = { exp(sumlogdifcol(data)) },
-              "pc" =  { exp(sumlogdifcol(princomp(data)$scores)) },
-              "ConvHull" = { conv <- convhulln(data,options = "FA")
-                             conv$vol } 
-              # TODO: LS è caricato il pacchetto per convhulln?
-             )
-
-  #out <- list(volume = V, method = method, coord = conv$hull)
-  attributes(V) <- list(method = method, coord = conv$hull)
-  return(V)
-}
 

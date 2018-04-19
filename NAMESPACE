@@ -17,11 +17,7 @@ S3method("summary", "ppgmmga")
 S3method("print", "summary.ppgmmga")
 S3method("plot", "ppgmmga")
 
-export(ppgmmgaAD, print.ppgmmgaAD, summary.ppgmmgaAD, print.summary.ppgmmgaAD, plot.ppgmmgaAD)
-S3method("print", "ppgmmgaAD")
-S3method("summary", "ppgmmgaAD")
-S3method("print", "summary.ppgmmgaAD")
-S3method("plot", "ppgmmgaAD")
+
 
 ## Options
 #export(.ppgmmga.default,.ppgmm.plot.default)
@@ -29,6 +25,5 @@ export(ppgmmga.options, ppgmmga.option.restore)
 #export(ppgmmga.plot.options)
 
 ## Functions
-export(EntropyGMM, NegentropyGMM, NegentropyPCA, 
-       volume, encodeBasis)
+export(EntropyGMM, NegentropyGMM, NegentropyPCA, encodeBasis)
 
