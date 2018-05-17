@@ -8,6 +8,7 @@ Approximation of the Negentropy for Gaussian mixture models (GMMs).
 }
 \usage{
 NegentropyGMM(G,
+              d,
               pro, 
               mean, 
               sigma, 
@@ -20,17 +21,21 @@ NegentropyGMM(G,
   \item{G}{
 an integer value specifying the numbers of mixture components.
 }
+  \item{d}{an integer value specifying the dimension of the data}
   \item{pro}{
 a vector whose \emph{g}th component is the mixing proportion for the \emph{g}th component of the mixture model.
 }
   \item{mean}{
 a \eqn{p x G} matrix indicating the mean for each component of the
 mixture model. The \emph{g}th column represent the mean for the gth
-component.}
+component.
+
+If \code{d = 1}, also a vector of lenght \code{G} can be provided.}
   \item{sigma}{
 an \eqn{p × p × G} array indicating the covariance matrix for the Gaus-
-sian mixture. The \emph{g}th matrix of this multidimensional array indi-
-cates the covariance matrix for the gth component.}
+sian mixture. The \emph{g}th matrix of this multidimensional array indicates the covariance matrix for the gth component.
+
+If \code{d = 1}, also a vector of lenght \code{G} can be provided.}
 
   \item{sigmaGauss}{
 an \eqn{p × p} covariance matrix for the Gaussian distribution.}
@@ -46,13 +51,15 @@ Possible values are:
 }
 The default is "UT".}
   \item{nsamples}{
-The sample size for the \code{"MC"} method.}
+The sample size for the \code{"MC"} method. If a different method FROM \code{"MC"} is specified, this argument is ignored.}
 }
 
 \details{
 The Negentropy index (Huber, 1985) describe the distance between the Gaussian distribution and onether distribution. The Negentropy is defined as follows:
 \deqn{J(z) = h(\phi(\mu_z, \Sigma_z)) - h(z),}
 where \eqn{h(\phi(\mu_z, \Sigma_z))} is the Entropy of the multivariate Normal distribution, \eqn{\phi(\mu_z, \Sigma_z)} is the multivariate Gaussian density of data \emph{z} with mean \eqn{\mu_z} and covariance matrix \eqn{\Sigma_z}, and \eqn{h(z)} is the Entropy of the estimated density for the projected data. If Guassian mixture are used to estimated the density of the data, the Negentropy does not have a closed formula, due to the fact that no closed formula for the GMMs Enntropy exists, and then an approximation is needed. The first choice is to approximate the Negentropy using Monte Carlo method (Hershey and Olsen, 2007). Neverteless such apprximation is the only one to converge to the real Negentropy, the MC method is inefficient from a computational point of view. The Unscendent approximation (Goldberger and Aronowitz, 2005), the Variationa approximation (Hershey and Olsen, 2007), and the Second order Taylor approximation (Huber et al, 2008) approximate the Entropy in more eficient way.  
+
+If the number of components \code{G} is equal to 1, then the Gaussian entropy is computed for h(\phi(\mu_z, \Sigma_z)).
 }
 \value{
 For "UT", "VAR", and "SOTE" method the function returns the value of the approximated Entropy. For the "MC" method the function returns a list with the value of the Entropy and the standard error.
@@ -96,31 +103,35 @@ mod = Mclust(data = X)
 
 # Unscented Transformation
 NentropyUT = EntropyGMM(G = mod$G,
-                     pro = mod$parameters$pro,
-                     mean = mod$parameters$mean,
-                     sigma = mod$parameters$variance$sigma,
-                     method = "UT")
+                        d = ncol(X),
+                        pro = mod$parameters$pro,
+                        mean = mod$parameters$mean,
+                        sigma = mod$parameters$variance$sigma,
+                        method = "UT")
 
 # Variational approximation
 NentropyVAR = EntropyGMM(G = mod$G,
-                      pro = mod$parameters$pro,
-                      mean = mod$parameters$mean,
-                      sigma = mod$parameters$variance$sigma,
-                      method = "VAR")
+                         d = ncol(X),
+                         pro = mod$parameters$pro,
+                         mean = mod$parameters$mean,
+                         sigma = mod$parameters$variance$sigma,
+                         method = "VAR")
 
 # Second order approximation
 NentropySOTE = EntropyGMM(G = mod$G,
-                      pro = mod$parameters$pro,
-                      mean = mod$parameters$mean,
-                      sigma = mod$parameters$variance$sigma,
-                      method = "SOTE")
+                          d = ncol(X),  
+                          pro = mod$parameters$pro,
+                          mean = mod$parameters$mean,
+                          sigma = mod$parameters$variance$sigma,
+                          method = "SOTE")
 
 # Second order approximation
 NentropyMC = EntropyGMM(G = mod$G,
-                      pro = mod$parameters$pro,
-                      mean = mod$parameters$mean,
-                      sigma = mod$parameters$variance$sigma,
-                      method = "MC")
+                        d = ncol(X),  
+                        pro = mod$parameters$pro,
+                        mean = mod$parameters$mean,
+                        sigma = mod$parameters$variance$sigma,
+                        method = "MC")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

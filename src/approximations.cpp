@@ -457,7 +457,7 @@ List EntropyMCapprox(arma::mat data,
                      arma::mat mean,
                      arma::cube sigma)
 {
-  int       n = data.n_rows;
+  int n = data.n_rows;
   arma::vec out; out.zeros(n);
   double    ent;
   double    se;

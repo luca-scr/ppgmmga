@@ -29,6 +29,8 @@ EntropyGMM <- function(G,
   # sigma <- as.matrix(sigma)
   # d <- dim(sigma)[1]
 
+
+  
   if(G == 1){
     
     Entropy = EntropyGauss(S = as.matrix(drop(sigma)), d = d)
@@ -36,6 +38,11 @@ EntropyGMM <- function(G,
     
   }else{
     
+    if(d == 1)
+    {
+      mean <- matrix(mean, ncol = G)
+      sigma <- array(sigma,c(d,d,G))
+    }
     
     Entropy <- switch(method,
                       "UT" =  EntropyUT(G = G,
@@ -150,7 +157,7 @@ EntropyMC <- function(G,
   if(d == 1)
   {
     par <- list(pro = as.vector(pro),
-                mean = as.matrix(mean),
+                mean = mean,
                 variance = list(modelName = "V",
                                 d = d,
                                 G = G,
