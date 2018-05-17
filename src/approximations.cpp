@@ -50,8 +50,7 @@ double dmvnrm(arma::rowvec x,
               bool logd = false) 
 {
   int    xdim = sigma.n_cols;
-  // int    n = x.n_elem;
-  // double out(n);
+  
   arma::mat rooti = arma::trans(arma::inv(trimatu(arma::chol(sigma))));
   double rootisum = arma::sum(log(rooti.diag()));
   double constants = -(static_cast<double>(xdim)/2.0) * log2pi;
@@ -243,7 +242,6 @@ double EntropyVAR(int G,
   for (int i=0; i<G; i++){
 
     left=0;
-    //denominator=0;
 
     for (int k=0; k<G; k++){
 
@@ -253,10 +251,6 @@ double EntropyVAR(int G,
 
 
    right = right + pro[i] * 0.5 * log(pow(2*M_PI*exp(1),d) * arma::det(sigma.slice(i)));
-
-    // double a = log(pow(2*M_PI*exp(1),d));
-    // Rcout << a;
-
 
   	D = D + pro[i] * log(left) ;
 
@@ -321,7 +315,6 @@ double EntropyUT(int G,
     e = 0;
 
   }
-  //return -(1/(2*d)) * en;
   return -(k) * en;
 
 }
@@ -363,90 +356,6 @@ double EntropySOTE(arma::mat data,
 
 
 
-//////////////MORE EFFICIENT?
-
-
-
-
-// [[Rcpp::depends("RcppArmadillo")]]
-// arma::vec gradient_alternative1(arma::vec data,
-//                                 arma::rowvec tradata,
-//                                 int G,
-//                                 arma::vec pro,
-//                                 arma::mat mean,
-//                                 arma::mat traM,
-//                                 arma::cube sigma)
-// {
-//
-//
-//   unsigned int d = mean.n_rows;
-//   arma::vec output; output.zeros(d);
-//
-//   for(int i=0; i<G; i++){
-//
-//
-//     output = output + arma::inv_sympd(sigma.slice(i)) * ((mean.col(i) - data) * (pro(i) * dmvnrm11(tradata, traM.row(i), sigma.slice(i))));
-//
-//
-//   }
-//
-//   return output;
-// }
-//
-//
-//
-//
-// // [[Rcpp::depends("RcppArmadillo")]]
-//
-// arma::mat F_alternative1(arma::vec data,
-//                          arma::rowvec tradata,
-//                          int G,
-//                          arma::vec pro,
-//                          arma::mat mean,
-//                          arma::mat traM,
-//                          arma::cube sigma){
-//
-//
-//   unsigned int d = mean.n_rows;
-//   arma::mat output; output.zeros(d,d);
-//   double MixtureDens = mixDensit(tradata,G, pro, mean,sigma);
-//   arma::vec grad = gradient_alternative1(data,tradata, G, pro, mean,traM, sigma);
-//   arma::mat I; I.eye( d, d );
-//   //arma::mat I; I.ones( d, d );
-//   for(int i=0; i<G; i++){
-//
-//     output = output + pro(i) * arma::inv_sympd(sigma.slice(i)) * (((1/MixtureDens) * (data - mean.col(i)) * grad.t()) + ((data - mean.col(i)) * arma::trans(arma::inv_sympd(sigma.slice(i)) * (data - mean.col(i)))) - I) * dmvnrm11(tradata, traM.row(i), sigma.slice(i));
-//   }
-//
-//   return (1/MixtureDens)*output;
-//
-//
-// }
-//
-//
-// // [[Rcpp::depends("RcppArmadillo")]]
-// //[[Rcpp::export]]
-//
-// double Huber1(arma::mat data,
-//               int G,
-//               arma::vec pro,
-//               arma::mat mean,
-//               arma::cube sigma){
-//
-//   double output = 0;
-//   double H=0;
-//   arma::mat trandata = data.t();
-//   arma::mat traM = mean.t();
-//
-//   for(int i=0; i<G; i++){
-//
-//     H = H + pro(i) * mixLogDensit(trandata.row(i), G, pro, mean, sigma);
-//     output = output +  (pro(i)/2) * (accu( F_alternative1(mean.col(i),traM.row(i), G,pro,mean,traM,sigma) % sigma.slice(i)));
-//   }
-//
-//   return (-H - output);
-//   //return -H;
-// }
 
 
 //[[Rcpp::export]]
@@ -469,8 +378,7 @@ List EntropyMCapprox(arma::mat data,
 
   ent = -1.0*arma::mean(out);
   se  = sqrt(arma::var(out)/n);
-  //return(arma::var(out,1));
-  
+
   return List::create(Rcpp::Named("Entropy") = ent,
                       Rcpp::Named("se") = se);
 }
