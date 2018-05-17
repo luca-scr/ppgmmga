@@ -18,10 +18,10 @@ Objects can be created by calls to the \code{\link{ppgmmga}} function.
 \item{data}{The original data.}
 \item{d}{The subspace dimension.}
 \item{approx}{The type of approximation used.}
-\item{GMM}{Object of class \code{"mclust"} with the infomration from the estimated GMM density.}
+\item{GMM}{Object of class \code{"mclust"} with the infomration for  GMM density estimations.}
 \item{GA}{Object of class \code{"ga"} with the information from the genetic algorithm search. }
-\item{Negentropy}{The value of the maximised Negentropy.}
-\item{basis}{The basis of the subspace.}
+\item{Negentropy}{The value of maximised Negentropy.}
+\item{basis}{The basis of subspace.}
 \item{Z}{The projected data.}
 }
 

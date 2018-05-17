@@ -11,7 +11,7 @@ Set or retrieve default values for use with \code{ppgmmga} package.
 \usage{ppgmmga.options(\ldots)}
 
 \details{
-The function assigns values to the \code{ga} function for genetic algorithms, \code{Mclust} function to estimate the Guassima mixture, and to other value in the \code{ppgmmga} function. 
+The function assigns values to the \code{ga} function for genetic algorithms, \code{Mclust} function to estimate Guassim mixture, and to other values in the \code{ppgmmga} function. 
 
 \describe{
 
@@ -20,9 +20,7 @@ The function assigns values to the \code{ga} function for genetic algorithms, \c
 
 }
 }
-\source{
-%%  ~~ reference to a publication or URL from which the data were obtained ~~
-}
+
 
 \author{
 Serafini A. \email{srf.alessio@gmail.com}
@@ -30,13 +28,13 @@ Serafini A. \email{srf.alessio@gmail.com}
 Scrucca L. \email{luca.scrucca@unipg.it}
 }
 
-\references{
-%%  ~~ possibly secondary sources and usages ~~
+\seealso{
+\code{\link{ppgmmga.options.restore}}
 }
 \examples{
 ppgmmga.options()
 
-# Single option
+# Print option
 
 ppgmmga.options("popSize")
 

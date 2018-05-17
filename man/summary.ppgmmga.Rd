@@ -1,7 +1,6 @@
 \name{summary.ppgmmga}
 \alias{summary.ppgmmga}
 \alias{print.summary.ppgmmga}
-%- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
 Summary for projection pursuit based on Gaussian mixtures and evolutionary algorithms}
@@ -12,19 +11,18 @@ Summary method for class \code{ppgmmga}.}
                 
 \method{print}{summary.ppgmmga}(x, digits = getOption("digits"), ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{an object of class \code{ppgmmga}.}
-  \item{check}{a logical. If \code{TRUE} a Monte Carlo Negentropy approximation check is performed.}
+  \item{check}{a logical value set to \code{FALSE}. If \code{TRUE} a Monte Carlo Negentropy approximation check is performed.}
 \item{x}{an object of class \code{summary.ppgmmga}.}
 \item{digits}{the number of significant digits.}
 \item{\dots}{further arguments.}
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{
-The summary function returns an object of class summary.ppgmmga which can be printed by the corresponding print method. A list with the information from the ppgmmga algorithm is returned.
+The summary function returns an object of class \code{summary.ppgmmga} which can be printed by the corresponding print method. A list with the information from the ppgmmga algorithm is returned.
+
+The argument \code{check = TRUE} compares the value of approximated Negentropy and the Monte Carlo Negentropy considering the same basis generated from the algorithm. Since the Monte Carlo approximation is the only to converge to the real Negentropy, it allows to check if approximated values are closed to the real Negentropy. The ratio between the approximated value from the algorithm and the value computed with Monte Carlo approximation is called Relative Accuracy. Such value should be close to \code{1} for a good approximation. 
 }
 
 \author{
@@ -33,31 +31,21 @@ Serafini A. \email{srf.alessio@gmail.com}
 Scrucca L. \email{luca.scrucca@unipg.it}
 }
 
-\references{
-%% ~put references to the literature/web site here ~
-}
-
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{ppgmmga}}
 }
 \examples{
-\dontrun{
+
 data(iris)
-X <- iris[,1:4]
+X <- iris[,-5]
 Class <- iris$Species
 
 # Unscented Transformation
-PPGMMGA1 <- ppgmmga(data = X, d = 2, approx = "UT")  # default
-summary(PPGMMGA1, check = TRUE)
+pp <- ppgmmga(data = X, d = 2, approx = "UT")  
+summary(pp, check = TRUE)
 }
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }

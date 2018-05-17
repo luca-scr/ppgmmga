@@ -4,7 +4,7 @@
 Approximated Negentropy for Gaussian mixture models
 }
 \description{
-Approximation of the Negentropy for Gaussian mixture models (GMMs).
+Negentropy approximation for Gaussian mixture models (GMMs).
 }
 \usage{
 NegentropyGMM(G,
@@ -16,7 +16,6 @@ NegentropyGMM(G,
               method = c("UT", "VAR", "SOTE", "MC"), 
               nsamples = 1e+05)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{G}{
 an integer value specifying the numbers of mixture components.
@@ -51,18 +50,18 @@ Possible values are:
 }
 The default is "UT".}
   \item{nsamples}{
-The sample size for the \code{"MC"} method. If a different method FROM \code{"MC"} is specified, this argument is ignored.}
+The sample size for the \code{"MC"} method. If a different method from \code{"MC"} is specified, this argument is ignored.}
 }
 
 \details{
-The Negentropy index (Huber, 1985) describe the distance between the Gaussian distribution and onether distribution. The Negentropy is defined as follows:
+The Negentropy index (Huber, 1985) describes the distance between the Gaussian distribution and another distribution. The Negentropy is defined as follows:
 \deqn{J(z) = h(\phi(\mu_z, \Sigma_z)) - h(z),}
-where \eqn{h(\phi(\mu_z, \Sigma_z))} is the Entropy of the multivariate Normal distribution, \eqn{\phi(\mu_z, \Sigma_z)} is the multivariate Gaussian density of data \emph{z} with mean \eqn{\mu_z} and covariance matrix \eqn{\Sigma_z}, and \eqn{h(z)} is the Entropy of the estimated density for the projected data. If Guassian mixture are used to estimated the density of the data, the Negentropy does not have a closed formula, due to the fact that no closed formula for the GMMs Enntropy exists, and then an approximation is needed. The first choice is to approximate the Negentropy using Monte Carlo method (Hershey and Olsen, 2007). Neverteless such apprximation is the only one to converge to the real Negentropy, the MC method is inefficient from a computational point of view. The Unscendent approximation (Goldberger and Aronowitz, 2005), the Variationa approximation (Hershey and Olsen, 2007), and the Second order Taylor approximation (Huber et al, 2008) approximate the Entropy in more eficient way.  
+where \eqn{h(\phi(\mu_z, \Sigma_z))} is the entropy of the multivariate Normal distribution, \eqn{\phi(\mu_z, \Sigma_z)} is the multivariate Gaussian density of data \emph{z} with mean \eqn{\mu_z} and covariance matrix \eqn{\Sigma_z}, and \eqn{h(z)} is the entropy of the estimated density for the projected data. If Guassian mixture are used to estimated the density of the data, the Negentropy does not have a closed formula, due to the fact that closed formula for the GMMs entropy does not exists, and then an approximation is needed. The first choice is to approximate the Negentropy using Monte Carlo method (Hershey and Olsen, 2007). Neverteless such approximation is the only one to converge to the real Negentropy, the MC method is inefficient from a computational point of view. The Unscendent approximation (Goldberger and Aronowitz, 2005), the Variationa approximation (Hershey and Olsen, 2007), and the Second order Taylor approximation (Huber et al, 2008) approximate the entropy in a more efficient way.  
 
 If the number of components \code{G} is equal to 1, then the Gaussian entropy is computed for h(\phi(\mu_z, \Sigma_z)).
 }
 \value{
-For "UT", "VAR", and "SOTE" method the function returns the value of the approximated Entropy. For the "MC" method the function returns a list with the value of the Entropy and the standard error.
+For \code{"UT"}, \code{"VAR"}, and \code{"SOTE"} methods the function returns the value of the approximated entropy. For the \code{"MC"} method the function returns a list with the value of entropy and standard error.
 }
 
 \author{
@@ -86,12 +85,6 @@ Huber, M. F., Bailey, T., Durrant-Whyte, H., and Hanebeck, U. D. (2008). \emph{O
 approximation for Gaussian mixture random vectors}. In Multisensor Fusion and Integra-
 tion for Intelligent Systems, 2008. MFI 2008. IEEE International Conference on, pages
 181–188. IEEE.}
-
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~

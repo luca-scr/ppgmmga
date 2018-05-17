@@ -29,20 +29,13 @@ EntropyGMM <- function(G,
   # sigma <- as.matrix(sigma)
   # d <- dim(sigma)[1]
 
-
-  
   if(G == 1){
     
-    Entropy = EntropyGauss(S = as.matrix(drop(sigma)), d = d)
+    Entropy = EntropyGauss(S = as.matrix(drop(sigma)),  d = d)
     method <- "Gaussian"
     
   }else{
     
-    if(d == 1)
-    {
-      mean <- matrix(mean, ncol = G)
-      sigma <- array(sigma,c(d,d,G))
-    }
     
     Entropy <- switch(method,
                       "UT" =  EntropyUT(G = G,
@@ -157,7 +150,7 @@ EntropyMC <- function(G,
   if(d == 1)
   {
     par <- list(pro = as.vector(pro),
-                mean = mean,
+                mean = as.matrix(mean),
                 variance = list(modelName = "V",
                                 d = d,
                                 G = G,
@@ -203,23 +196,6 @@ NegentropyMC <- function(par,
                           G = GMM$G,
                           d = d)
 
-  # simulate data from GMM
-  # x <- sim("VVV", parameters = par, n = S)[,-1]
-  # f <- array(NA, c(nrow(x), G))
-  # for(j in 1:G)
-  # { f[,j] <- mclust:::mvdnorm(x, Mu[j,], Sigma[,,j], log = TRUE) }
-  # f <- sweep(f, 2, FUN = "+", STATS = log(par$pro))
-  # logf <- apply(f, 1, mclust:::logsumexp)
-
-  # not needed to simulate from N(0,I) because closed form solution
-  # par0 <- list(pro = 1, mean = matrix(0, d, 1),
-  #              variance = list(modelName = "XII", d = d, G = 1, sigmasq = 1,
-  #                              Sigma = diag(d), sigma = array(diag(d), c(d,d,1)),
-  #                              scale = 1))
-  # x0 <- mclust::sim("XII", n = 1e5, parameters = par0)
-  # logf0 <- mclust:::dmvnorm(x, c(0,0), diag(2), log = TRUE)
-  # -mean(logf0) # = (0.5*(1+log(2*pi)))*d
-
   # Negentropy
   EMC <- EntropyMC(G = GMM$G,
                    pro = GMM$parameters$pro,
@@ -246,7 +222,6 @@ NegentropyPCA <- function(object, d = object$d, nsamples = 1e5)
   if(!inherits(object, "ppgmmga"))
     stop("'object' must be of class 'ppgmmga'")
 
-  # n <- nrow(object$data)
   PCA <- prcomp(object$data)
   B <- as.matrix(PCA$rotation)[,seq(d),drop=FALSE]
   transfGMM <-  LinTransf(mean = object$GMM$parameters$mean,

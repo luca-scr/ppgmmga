@@ -1,11 +1,10 @@
 \name{EntropyGMM}
 \alias{EntropyGMM}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Approximated Entropy for Gaussian mixture models
+Approximated entropy for Gaussian mixture models
 }
 \description{
-Approximation of the Entropy for Gaussian mixture models (GMMs).
+Entropy approximation for Gaussian mixture models (GMMs).
 
 }
 \usage{
@@ -17,7 +16,6 @@ EntropyGMM(G,
            method = c("UT", "VAR", "SOTE", "MC"),
            nsamples = 1e+05)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
 
   \item{G}{
@@ -54,11 +52,11 @@ The default is "UT".
 The sample size for the \code{"MC"} method. If a different method FROM \code{"MC"} is specified, this argument is ignored.}
 }
 \details{
-Gaussian mixture models (GMMs) do not have a closed form for the Entropy, and then an approximation needed. The first choice is to approximate the Entropy using Monte Carlo method (Hershey and Olsen, 2007). Neverteless such apprximation is the only one to converge to the real Entropy, the MC method is inefficient from a computational point of view. The Unscendent approximation (Goldberger and Aronowitz, 2005), the Variationa approximation (Hershey and Olsen, 2007), and the Second order Taylor approximation (Huber et al, 2008) approximate the Entropy in more eficient way.
+Gaussian mixture models (GMMs) do not have a closed form for the entropy, and then an approximation needed. The first choice is to approximate the entropy using Monte Carlo methods (Hershey and Olsen, 2007). Neverteless such apprximation is the only one to converge to the real Entropy, the MC method is inefficient from a computational point of view. The Unscendent approximation (Goldberger and Aronowitz, 2005), the Variationa approximation (Hershey and Olsen, 2007), and the Second order Taylor approximation (Huber et al, 2008) approximate the entropy in a more efficient way.
 
 If the number of components \code{G} is equal to 1, then the Gaussian entropy is computed.}
 \value{
-For "UT", "VAR", and "SOTE" method the function returns the value of the approximated Entropy. For the "MC" method the function returns a list with the value of the entropy and the standard error.
+For \code{"UT"}, \code{"VAR"}, and \code{"SOTE"} methods the function returns the value of the approximated entropy. For the \code{"MC"} method the function returns a list with the value of entropy and standard error.
 }
 
 \author{
@@ -82,12 +80,6 @@ tion for Intelligent Systems, 2008. MFI 2008. IEEE International Conference on, 
 181–188. IEEE.
 
 }
-
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
@@ -130,7 +122,6 @@ entropyMC = EntropyGMM(G = mod$G,
                        sigma = mod$parameters$variance$sigma,
                        method = "MC")
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }
