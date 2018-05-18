@@ -117,7 +117,7 @@ NentropySOTE = EntropyGMM(G = mod$G,
                           sigma = mod$parameters$variance$sigma,
                           method = "SOTE")
 
-# Second order approximation
+# Monte Carlo approximation
 NentropyMC = EntropyGMM(G = mod$G,
                         d = ncol(X),  
                         pro = mod$parameters$pro,

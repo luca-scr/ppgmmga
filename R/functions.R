@@ -36,6 +36,11 @@ EntropyGMM <- function(G,
     
   }else{
     
+    if(d == 1)
+    {
+      mean <- matrix(mean,ncol = G)
+      sigma <- array(sigma, c(d,d,G))
+    }
     
     Entropy <- switch(method,
                       "UT" =  EntropyUT(G = G,
@@ -94,6 +99,11 @@ NegentropyGMM <- function(G,
     method = "Gaussian entropy"
   }else{
     
+    if(d == 1)
+    {
+      mean <- matrix(mean,ncol = G)
+      sigma <- array(sigma, c(d,d,G))
+    }
     
     Entropy <- switch(method,
                       "UT" =  EntropyUT(G = G,
