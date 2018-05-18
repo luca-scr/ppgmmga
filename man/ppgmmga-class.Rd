@@ -5,9 +5,7 @@
 Class \code{"ppgmmga"}}
 \description{
 An S3 class object for ppgmmga algorithm.}
-\usage{
-ppgmmga-class(x)
-}
+
 \section{Objects from the class}{
 Objects can be created by calls to the \code{\link{ppgmmga}} function.
 }
@@ -35,5 +33,5 @@ Scrucca L. \email{luca.scrucca@unipg.it}
 
 \keyword{classes}
 
-\seealso{See \code{\link{ppgmmga}}.}
+\seealso{\code{\link{ppgmmga}}}
 

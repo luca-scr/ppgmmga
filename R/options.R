@@ -52,7 +52,7 @@ ppgmmga.options <- function(...)
   invisible(temp)
 }
 
-ppgmmga.option.restore <- function()
+ppgmmga.options.restore <- function()
 {
   restorealg <- list("orth" = "QR",
                      "popSize" = 100,

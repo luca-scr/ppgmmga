@@ -81,11 +81,9 @@ tion for Intelligent Systems, 2008. MFI 2008. IEEE International Conference on, 
 
 }
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 
+require(mclust)
 data(iris)
 X = iris[,-5]
 mod = Mclust(data = X)

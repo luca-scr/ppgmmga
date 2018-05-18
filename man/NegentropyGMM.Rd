@@ -86,10 +86,9 @@ approximation for Gaussian mixture random vectors}. In Multisensor Fusion and In
 tion for Intelligent Systems, 2008. MFI 2008. IEEE International Conference on, pages
 181–188. IEEE.}
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+
 \examples{
+require(mclust)
 data(iris)
 X = iris[,-5]
 mod = Mclust(data = X)

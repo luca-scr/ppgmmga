@@ -5,10 +5,11 @@ Plot \code{ppgmmga} results}
 \description{
 Plot the data onto a selected subsapce by appling the ppgmmga algorithm.}
 \usage{
-plot.ppgmmga(object, 
+\method{plot}{ppgmmga}(object, 
              class = NULL, 
              dim = 1:object$d, 
-             drawAxis = TRUE, ...)
+             drawAxis = TRUE, 
+             bins = nclass.Sturges,...)
 }
 \arguments{
   \item{object}{
@@ -20,6 +21,7 @@ A numeric or character vector indicating the classification of the observations.
 }
   \item{drawAxis}{
 a logical defaulting to \code{TRUE}. If set a \code{TRUE} the projected axis are include in the plot.}
+  \item{bins}{function to compute the number of classes for a histogram. \code{nclass.Sturges} is used by default. For more detail on \code{nclass.Sturges} and other methods look at \code{nclass} help. User may specified any type of one argument function to compute. For multivariate projections such argument is ignored.}
   \item{\dots}{
 further arguments.}
 }

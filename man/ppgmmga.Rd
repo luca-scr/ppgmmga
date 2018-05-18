@@ -21,7 +21,8 @@ ppgmmga(data,
         scale = FALSE, 
         gmm = NULL, 
         gatype = c("ga", "gaisl"), 
-        opt = list(), ...)
+        opt = list(),
+        seed = NULL, ...)
 }
 
 \arguments{
@@ -58,6 +59,7 @@ Possible values are:
 }
   \item{opt}{
 A list of options for the density estimation and Genetic algorithms embedded in the function. This parameter collect all the important options to pass to \code{densityMclust} function of \code{Mclust} package for the density estimation, and to code{ga} function of \code{GA} package for genetic operator of the Genetic algorithm.}
+  \item{seed}{an integer value with the random number generator state. It may be used to replicate the results of ppgmmga algorithm.}
   \item{\dots}{
 additional arguments.
 }
