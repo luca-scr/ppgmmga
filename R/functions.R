@@ -26,50 +26,41 @@ EntropyGMM <- function(G,
 {
 
   method <- match.arg(method, choices = eval(formals(EntropyGMM)$method))
-  # sigma <- as.matrix(sigma)
-  # d <- dim(sigma)[1]
 
-  if(G == 1){
-    
-    Entropy = EntropyGauss(S = as.matrix(drop(sigma)),  d = d)
-    method <- "Gaussian"
-    
-  }else{
-    
-    if(d == 1)
-    {
-      mean <- matrix(mean,ncol = G)
-      sigma <- array(sigma, c(d,d,G))
-    }
-    
-    Entropy <- switch(method,
-                      "UT" =  EntropyUT(G = G,
+  pro <- as.vector(pro)
+  if(d == 1)
+  {
+    mean <- matrix(mean, ncol = G)
+    sigma <- array(sigma, dim = c(d,d,G))
+  }
+  
+  Entropy <- switch(method,
+                    "UT" =  EntropyUT(G = G,
+                                      pro = pro,
+                                      mean = mean,
+                                      sigma = sigma,
+                                      d = d),
+                    "VAR" =  EntropyVAR(G = G,
                                         pro = pro,
                                         mean = mean,
-                                        sigma = sigma,
+                                        sigma= sigma,
                                         d = d),
-                      "VAR" =  EntropyVAR(G = G,
+                    "SOTE" =  EntropySOTE(data = mean,
+                                          G = G,
                                           pro = pro,
                                           mean = mean,
-                                          sigma= sigma,
-                                          d = d),
-                      "SOTE" =  EntropySOTE(data = mean,
-                                            G = G,
-                                            pro = pro,
-                                            mean = mean,
-                                            sigma = sigma),
-                      "MC" =   EntropyMC(G = G,
-                                         pro = pro,
-                                         mean = mean,
-                                         sigma = sigma,
-                                         d = d,
-                                         nsamples = nsamples)
-    )
-  }
-
+                                          sigma = sigma),
+                    "MC" =   EntropyMC(G = G,
+                                       pro = pro,
+                                       mean = mean,
+                                       sigma = sigma,
+                                       d = d,
+                                       nsamples = nsamples)
+  )
   
-  attributes(Entropy) <- list(names = names(Entropy),
-                              approximation = method)
+  if(!is.list(Entropy))
+    Entropy <- list(Entropy = Entropy)
+  Entropy$method <- method
   return(Entropy)
 }
 
@@ -86,62 +77,54 @@ NegentropyGMM <- function(G,
                           method = c("UT", "VAR", "SOTE","MC"),
                           nsamples = 1e5)
 {
-  # sigma <- as.matrix(sigma)
-  # d <- dim(sigma)[1]
   method <- match.arg(method, 
                       choices = eval(formals(NegentropyGMM)$method))
   if(d != nrow(sigmaGauss) | d != ncol(sigmaGauss))
     { stop("The dimension of sigmaGauss does not match that of GMM parameters!") }
   
-  if(G == 1){
+  if(d == 1)
+  {
+    mean <- matrix(mean, ncol = G)
+    sigma <- array(sigma, dim = c(d,d,G))
+  }
     
-    Entropy = EntropyGauss(S = as.matrix(sigma), d = d)
-    method = "Gaussian entropy"
-  }else{
-    
-    if(d == 1)
-    {
-      mean <- matrix(mean,ncol = G)
-      sigma <- array(sigma, c(d,d,G))
-    }
-    
-    Entropy <- switch(method,
-                      "UT" =  EntropyUT(G = G,
+  Entropy <- switch(method,
+                    "UT" =  EntropyUT(G = G,
+                                      pro = pro,
+                                      mean = mean,
+                                      sigma = sigma,
+                                      d = d),
+                    "VAR" =  EntropyVAR(G = G,
                                         pro = pro,
                                         mean = mean,
-                                        sigma = sigma,
+                                        sigma= sigma,
                                         d = d),
-                      "VAR" =  EntropyVAR(G = G,
+                    "SOTE" =  EntropySOTE(data = mean,
+                                          G = G,
                                           pro = pro,
                                           mean = mean,
-                                          sigma= sigma,
-                                          d = d),
-                      "SOTE" =  EntropySOTE(data = mean,
-                                            G = G,
-                                            pro = pro,
-                                            mean = mean,
-                                            sigma = sigma),
-                      "MC" =   EntropyMC(G = G,
-                                         pro = pro,
-                                         mean = mean,
-                                         sigma = sigma,
-                                         d = d,
-                                         nsamples = nsamples)
-    )
-  }
-  
+                                          sigma = sigma),
+                    "MC" =   EntropyMC(G = G,
+                                       pro = pro,
+                                       mean = mean,
+                                       sigma = sigma,
+                                       d = d,
+                                       nsamples = nsamples)
+  )
 
   if(method != "MC")
   {
-    Negentropy <- - Entropy[[1]] + EntropyGauss(S = sigmaGauss, d = d)
+    Negentropy <- -Entropy[[1]] + EntropyGauss(S = sigmaGauss, d = d)
+    se <- NA
   } else
   {
-    Negentropy <- Entropy
-    Negentropy[[1]] <- -Entropy[[1]] + EntropyGauss(S = sigmaGauss, d = d)
+    Negentropy <- -Entropy[[1]] + EntropyGauss(S = sigmaGauss, d = d)
+    se <- Entropy$se
   }
 
-  attributes(Negentropy) <- list(names = names(Negentropy),
-                                 approximation = method)
+  Negentropy <- list(Negentropy = Negentropy,
+                     se = se,
+                     method = method)
   return(Negentropy)
 }
 
@@ -156,7 +139,6 @@ EntropyMC <- function(G,
                       d,
                       nsamples)
 {
-
   if(d == 1)
   {
     par <- list(pro = as.vector(pro),
