@@ -10,8 +10,7 @@ Authors@R: c(person("Alessio", "Serafini", role = c("aut", "cre"),
                     email = "luca.scrucca@unipg.it"))
 Depends: R (>= 3.0)
 Imports: Rcpp (>= 0.12.5), mclust (>= 5.0), GA (>= 3.1), 
-         ggplot2 (>= 2.2.1), ggthemes (>= 3.4.0), 
-         rrcov (>= 1.4), geometry (>= 0.3)
+         ggplot2 (>= 2.2.1), ggthemes (>= 3.4.0),
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7)
 License: GPL (>= 2)
 URL: https://www.serafinialessio.it/, http://www.stat.unipg.it/luca/

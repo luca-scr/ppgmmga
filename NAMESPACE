@@ -5,7 +5,7 @@ useDynLib("ppgmmga", .registration = TRUE)
 importFrom("Rcpp", sourceCpp)
 #import("RcppArmadillo")
 
-import("mclust", "GA", "ggplot2", "ggthemes","rrcov","geometry")
+import("mclust", "GA", "ggplot2", "ggthemes")
 importFrom("grDevices", "nclass.Sturges")
 importFrom("stats", "princomp", "qchisq", "qnorm")
 importFrom("utils", "packageVersion")
