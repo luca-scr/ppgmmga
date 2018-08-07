@@ -27,5 +27,5 @@ export(ppgmmga.options, ppgmmga.options.restore)
 ## Functions
 export(EntropyGMM, NegentropyGMM, NegentropyPCA)
 #export(encodeBasis)
-export(NegentropyPCA)
+export(NegentropyPCA,NegentropyfastICA,NegentropyICA,NegentropyFA)
 
