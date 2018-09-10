@@ -58,8 +58,9 @@ The Negentropy index (Huber, 1985) describes the distance between the Gaussian d
 \deqn{J(z) = h(\phi(\mu_z, \Sigma_z)) - h(z),}
 where \eqn{h(\phi(\mu_z, \Sigma_z))} is the entropy of the multivariate Normal distribution, \eqn{\phi(\mu_z, \Sigma_z)} is the multivariate Gaussian density of data \emph{z} with mean \eqn{\mu_z} and covariance matrix \eqn{\Sigma_z}, and \eqn{h(z)} is the entropy of the estimated density for the projected data. If Guassian mixture are used to estimated the density of the data, the Negentropy does not have a closed formula, due to the fact that closed formula for the GMMs entropy does not exists, and then an approximation is needed. The first choice is to approximate the Negentropy using Monte Carlo method (Hershey and Olsen, 2007). Neverteless such approximation is the only one to converge to the real Negentropy, the MC method is inefficient from a computational point of view. The Unscendent approximation (Goldberger and Aronowitz, 2005), the Variationa approximation (Hershey and Olsen, 2007), and the Second order Taylor approximation (Huber et al, 2008) approximate the entropy in a more efficient way.  
 
-If the number of components \code{G} is equal to 1, then the Gaussian entropy is computed for h(\phi(\mu_z, \Sigma_z)).
+If the number of components \code{G} is equal to 1, then the Gaussian entropy is computed for \eqn{h(\phi(\mu_z, \Sigma_z))}.
 }
+
 \value{
 For \code{"UT"}, \code{"VAR"}, and \code{"SOTE"} methods the function returns the value of the approximated entropy. For the \code{"MC"} method the function returns a list with the value of entropy and standard error.
 }
@@ -88,42 +89,44 @@ tion for Intelligent Systems, 2008. MFI 2008. IEEE International Conference on, 
 
 
 \examples{
-require(mclust)
+\dontrun{
+library(mclust)
 data(iris)
-X = iris[,-5]
-mod = Mclust(data = X)
+X <- iris[,-5]
+mod <- Mclust(data = X)
 
 # Unscented Transformation
-NentropyUT = EntropyGMM(G = mod$G,
-                        d = ncol(X),
-                        pro = mod$parameters$pro,
-                        mean = mod$parameters$mean,
-                        sigma = mod$parameters$variance$sigma,
-                        method = "UT")
-
-# Variational approximation
-NentropyVAR = EntropyGMM(G = mod$G,
+NentropyUT <- EntropyGMM(G = mod$G,
                          d = ncol(X),
                          pro = mod$parameters$pro,
                          mean = mod$parameters$mean,
                          sigma = mod$parameters$variance$sigma,
-                         method = "VAR")
+                         method = "UT")
 
-# Second order approximation
-NentropySOTE = EntropyGMM(G = mod$G,
-                          d = ncol(X),  
+# Variational approximation
+NentropyVAR <- EntropyGMM(G = mod$G,
+                          d = ncol(X),
                           pro = mod$parameters$pro,
                           mean = mod$parameters$mean,
                           sigma = mod$parameters$variance$sigma,
-                          method = "SOTE")
+                          method = "VAR")
+
+# Second order approximation
+NentropySOTE <- EntropyGMM(G = mod$G,
+                           d = ncol(X),  
+                           pro = mod$parameters$pro,
+                           mean = mod$parameters$mean,
+                           sigma = mod$parameters$variance$sigma,
+                           method = "SOTE")
 
 # Monte Carlo approximation
-NentropyMC = EntropyGMM(G = mod$G,
-                        d = ncol(X),  
-                        pro = mod$parameters$pro,
-                        mean = mod$parameters$mean,
-                        sigma = mod$parameters$variance$sigma,
-                        method = "MC")
+NentropyMC <- EntropyGMM(G = mod$G,
+                         d = ncol(X),  
+                         pro = mod$parameters$pro,
+                         mean = mod$parameters$mean,
+                         sigma = mod$parameters$variance$sigma,
+                         method = "MC")
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

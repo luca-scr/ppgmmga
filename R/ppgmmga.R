@@ -2,11 +2,12 @@ ppgmmga <- function(data,
                     d,
                     approx = c("UT","VAR","SOTE"),
                     center = TRUE,
-                    scale = FALSE,
+                    scale = TRUE,
                     gmm = NULL,
-                    gatype = c("ga", "gaisl", "de"),
-                    opt = list(),
+                    gatype = c("ga", "gaisl"),
+                    options = ppgmmga.options(),
                     seed = NULL,
+                    verbose = interactive(),
                     ...)
 {
 
@@ -33,12 +34,12 @@ ppgmmga <- function(data,
 
   data <-  data.matrix(data)
   p <- dim(data)[2]
-
   if(d > p)
-    { stop(paste("d must be smaller or equal to", p)) }
-
-  options <- ppgmmga.options(opt)
-
+  { 
+    d <- p
+    warning("dimension of projection subspace greater than the number of variables;\nautomatically set equal to ", d)
+  }
+  
   ### center & scale the data
   Z <- scale(x = data, center = center, scale = scale)
   dimnames(Z) <- dimnames(data)
@@ -50,7 +51,8 @@ ppgmmga <- function(data,
                          modelNames = options$modelNames,
                          G = options$G,
                          initialization = list(hcPairs = hc(Z, use = options$initMclust)),
-                         verbose = FALSE, ...)
+                         verbose = verbose, 
+                         ...)
   } else
   { 
     if(!inherits(gmm, "densityMclust"))
@@ -74,17 +76,20 @@ ppgmmga <- function(data,
                          run = options$run,
                          optim = options$optim,
                          optimArgs = list(method = options$optimMethod,
-                                          poptim = options$poptim,
-                                          pressel = options$pressel,
-                                          control = list(fnscale = options$fnscale, maxit = options$maxit)),
+                                          poptim = options$optimPoptim,
+                                          pressel = options$optimPressel,
+                                          control = list(fnscale = -1,
+                                                         maxit = options$optimMaxit)),
                          selection = options$selection,
                          crossover = options$crossover,
                          mutation = options$mutation,
-                         elitism = base::max(1, round(options$popSize*0.05)),
-                         pcrossover = options$pcr,
-                         pmutation = options$pm,
+                         # elitism = base::max(1, round(options$popSize*0.05)),
+                         elitism = 1,
+                         pcrossover = options$pcrossover,
+                         pmutation = options$pmutation,
                          parallel = options$parallel,
                          seed = seed, 
+                         monitor = verbose,
                          ...),
                "gaisl" = gaisl(type = "real-valued",
                                fitness = approxFun,
@@ -99,20 +104,23 @@ ppgmmga <- function(data,
                                run = options$run,
                                optim = options$optim,
                                optimArgs = list(method = options$optimMethod,
-                                                poptim = options$poptim,
-                                                pressel = options$pressel,
-                                                control = list(fnscale = options$fnscale, maxit = options$maxit)),
+                                                poptim = options$optimPoptim,
+                                                pressel = options$optimPressel,
+                                                control = list(fnscale = -1,
+                                                               maxit = options$optimMaxit)),
                                selection = options$selection,
                                crossover = options$crossover,
                                mutation = options$mutation,
-                               pcrossover = options$pcr,
-                               pmutation = options$pm,
-                               elitism = base::max(1, round(options$popSize*0.05)),
+                               pcrossover = options$pcrossover,
+                               pmutation = options$pmutation,
+                               # elitism = base::max(1, round(options$popSize*0.05)),
+                               elitism = 1,
                                numIslands = options$numIsland,
                                migrationRate = options$migrationRate,
                                migrationInterval = options$migrationInterval,
                                parallel = options$parallel,
                                seed = seed,
+                               monitor = verbose,
                                ...),
                "de" = de(type = "real-valued",
                          fitness = function(...) 
@@ -126,16 +134,18 @@ ppgmmga <- function(data,
                          run = options$run,
                          optim = options$optim,
                          optimArgs = list(method = options$optimMethod,
-                                          poptim = options$poptim,
-                                          pressel = options$pressel,
-                                          control = list(fnscale = options$fnscale, maxit = options$maxit)),
+                                          poptim = options$optimPoptim,
+                                          pressel = options$optimPressel,
+                                          control = list(fnscale = -1, 
+                                                         maxit = options$optimMaxit)),
                          lower = rep(rep(0, p-1), d),
                          upper = rep(c(2*pi, rep(pi,p-2)), d),
-                         pcrossover = options$pcr,
+                         pcrossover = options$pcrossover,
                          pmutation = 0,
                          stepsize = NA,
                          parallel = options$parallel,
                          seed = seed, 
+                         monitor = verbose,
                          ...)
   )
 
@@ -193,6 +203,12 @@ summary.ppgmmga <- function(object, check = FALSE, ...)
 
 print.summary.ppgmmga <- function(x, digits = getOption("digits"), ...)
 {
+  dotargs <- list(...)
+  if(is.null(dotargs$head)) dotargs$head <- 20
+  if(is.null(dotargs$tail)) dotargs$tail <- 2
+  if(is.null(dotargs$chead)) dotargs$chead <- 10
+  if(is.null(dotargs$ctail)) dotargs$ctail <- 2
+  
   cat("-------------------------------------------------------","\n")
   cat("Projection Pursuit GMM estimated via Genetic Algorithms","\n")
   cat("-------------------------------------------------------","\n\n")
@@ -216,11 +232,15 @@ print.summary.ppgmmga <- function(x, digits = getOption("digits"), ...)
             signif(x$Negentropy, digits), "\n"))
 
   cat(paste("GA encoded basis solution:","\n"))
-  print(x$encodedBasis, digits = digits)
+  do.call(".printShortMatrix", 
+          c(list(x$encodedBasis, digits = digits), 
+            dotargs[c("head", "tail", "chead", "ctail")]))
   cat("\n")
   cat(paste("Estimated projection basis:","\n"))
-  print(x$basis, digits = digits)
-  
+  do.call(".printShortMatrix", 
+          c(list(x$basis, digits = digits), 
+            dotargs[c("head", "tail", "chead", "ctail")]))
+
   if(!is.null(x$check))
   {
     cat(paste("\nMonte Carlo Negentropy approximation check:","\n"))
@@ -231,6 +251,42 @@ print.summary.ppgmmga <- function(x, digits = getOption("digits"), ...)
   }
 
   invisible()
+}
+
+#----------------------------------------------------------------------------#
+# print a short version of a matrix by allowing to select the number of 
+# head/tail rows and columns to display
+
+.printShortMatrix <- function(x, head = 2, tail = 1, chead = 5, ctail = 1, ...)
+{ 
+  x <- as.matrix(x)
+  nr <- nrow(x)
+  nc <- ncol(x)
+  if(is.na(head <- as.numeric(head))) head <- 2
+  if(is.na(tail <- as.numeric(tail))) tail <- 1
+  if(is.na(chead <- as.numeric(chead))) chead <- 5
+  if(is.na(ctail <- as.numeric(ctail))) ctail <- 1
+  
+  if(nr > (head + tail + 1))
+    { rnames <- rownames(x)
+      if(is.null(rnames)) 
+        rnames <- paste("[", 1:nr, ",]", sep ="")
+      x <- rbind(x[1:head,,drop=FALSE], 
+                 rep(NA, nc), 
+                 x[(nr-tail+1):nr,,drop=FALSE])
+      rownames(x) <- c(rnames[1:head], " ... ", rnames[(nr-tail+1):nr])
+  }
+  if(nc > (chead + ctail + 1))
+    { cnames <- colnames(x)
+      if(is.null(cnames)) 
+        cnames <- paste("[,", 1:nc, "]", sep ="")
+      x <- cbind(x[,1:chead,drop=FALSE], 
+                 rep(NA, nrow(x)), 
+                 x[,(nc-ctail+1):nc,drop=FALSE])
+      colnames(x) <- c(cnames[1:chead], " ... ", cnames[(nc-ctail+1):nc])
+  }
+          
+  print(x, na.print = "", ...)
 }
 
 NegentropyMCcheck <- function(object, nsamples = 1e5, conf.level = NULL)

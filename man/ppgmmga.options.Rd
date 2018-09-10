@@ -21,8 +21,8 @@ Available options are:
 \describe{
   \item{\code{orth}}{a}
   \item{popSize}{a}
-  \item{pcr}{a}
-  \item{pm}{a}
+  \item{pcrossover}{a}
+  \item{pmutation}{a}
   \item{\code{maxiter}}{an integer value indicating the maximum number of iteration before stopping the Genetic algorithm. The value is set by default to 100}
 \item{run}{an integer value indicating the number of generation without improvment in the best value of fitness fuction befor stopping the algorithm. The value is set by default to 100}
 \item{optim}{}
@@ -36,8 +36,8 @@ Available options are:
 \item{optimMethod}{}
 \item{poptim}{}
 \item{pressel}{}
-\item{fnscale}{}
-\item{maxit}{a logical value indicating whether or not lcoal search is performed. the value is set to \code{TRUE}}
+\item{optimFnscale}{}
+\item{optimMaxit}{a logical value indicating whether or not lcoal search is performed. the value is set to \code{TRUE}}
 \item{initMclust}{a string indicating the type of initialisation for the mixture model. Look \code{mclust.options} for the available initialisation.}
 \item{modelNames}{a string value or vector containing the type of covariance parametrisation for the mixtures. Look at \code{mclustModelNames} for the available models.}
 \item{G}{an integer value or vactor containing the number of mixtures component to estimate}

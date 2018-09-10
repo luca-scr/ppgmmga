@@ -1,0 +1,12 @@
+# Changes to package
+
+- renamed for consistency with GA package: 
+  pcr -> pcrossover
+  pm -> pmutation 
+- reorganized ppgmmga.options() list
+- Previosly argument 'maxiter' have always precedence to 'maxit', now the latter is renamed as 'optimMaxit'
+- All options related to local search have prefix 'optim'. 
+
+- optimFnscale = -1 is really needed? NO
+
+- set elitism = 1 in ga() searches? OK

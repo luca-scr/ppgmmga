@@ -1,9 +1,6 @@
-
 #################################################################################
 #                    PLOT PPGMMGA                                               #
 #################################################################################
-
-
 
 plot.ppgmmga <- function(object, class = NULL,
                          dim = 1:object$d,
@@ -26,27 +23,43 @@ plot.ppgmmga <- function(object, class = NULL,
     poi <- geom_point(cex = 1, aes(shape = class, colour = class))
   }
   else
-  { poi <- geom_point(cex = 1, shape = 20, colour = "black") }
+  { 
+    class <- rep(1, nrow(Zpp))
+    class.name <- NULL
+    poi <- geom_point(cex = 1, shape = 20, colour = "black") 
+  }
 
   switch(d,
-         "1" = # 1D case
+         "1" = # 1D case ----
          { 
-           gg <- ggplot(Zpp, aes_string(x = znames[1], fill = class)) +
-             geom_histogram(aes(y=..density..),
-                            position = "identity",
-                            alpha = 0.6,
-                            bins = if(is.function(bins)) bins(Zpp[,1])
-                                   else as.numeric(bins)) +
-             scale_fill_tableau("tableau10")
-           if(!is.null(class))
-             gg <- gg + labs(fill = class.name)
-           gg <- gg + geom_rug(alpha = 1/2)
+           gg <- ggplot(Zpp, aes_string(x = znames[1], 
+                                        fill = class,
+                                        col = class)) +
+                 geom_histogram(aes(y = ..density..),
+                                position = "identity",
+                                alpha = 0.6,
+                                bins = if(is.function(bins)) bins(Zpp[,1])
+                                else as.numeric(bins)) + 
+                 geom_rug(alpha = 1/2) +
+                 theme_bw()
+
+           if(!is.null(class.name))
+           {
+             gg <- gg + 
+               scale_fill_tableau("Classic 10") +
+               scale_color_tableau("Classic 10") +
+               labs(fill = class.name, col = class.name)
+           } else
+           {
+             gg <- gg + guides(col = FALSE, fill = FALSE)
+           }
            return(gg)
          },
-         "2" = # 2D case
+         "2" = # 2D case ----
          { 
            gg <- ggplot(Zpp, aes_string(x = znames[1], y = znames[2])) + 
-             poi + scale_colour_tableau("tableau10")
+             poi + scale_colour_tableau("Classic 10") +
+             theme_bw()
            if(!is.null(class))
              gg <- gg + labs(shape = class.name, colour = class.name)
 
@@ -60,13 +73,14 @@ plot.ppgmmga <- function(object, class = NULL,
              df2 <- transform(df2,
                               x = .7 * mult * df2$x,
                               y = .7 * mult * df2$y)
-             gg <-  gg + geom_segment(data = df2, aes(x=0, y=0, xend=x, yend=y),
-                                      arrow = arrow(length=unit(1/2,"picas")),
-                                      alpha = 0.5, color = "gray30") +
+             gg <-  gg + 
+               geom_segment(data = df2, aes(x=0, y=0, xend=x, yend=y),
+                            arrow = arrow(length=unit(1/2,"picas")),
+                            alpha = 0.5, color = "gray30") +
                geom_text(data = df2, aes(x=x, y=y, label=varnames),
-                         nudge_x = 0.1*sign(df2$x),
-                         nudge_y = 0.1 * sign(df2$y),
-                         alpha = 0.5, color="gray30")
+                         nudge_x = 0.1*diff(range(df2$x))*sign(df2$x),
+                         nudge_y = 0.1*diff(range(df2$y))*sign(df2$y),
+                         alpha = 0.5, color = "gray30")
            }
 
            if(nlevels(class) > 6)
@@ -74,12 +88,12 @@ plot.ppgmmga <- function(object, class = NULL,
            
            return(gg)
          },
-         { # d > 2 case
-           if(is.null(class))
+         { # d > 2 case ----
+           if(is.null(class.name))
            { class <- rep(1,nrow(Zpp))
              col <- "black"
            } else
-           { col <- tableau_color_pal()(nlevels(class)) }
+           { col <- tableau_color_pal("Classic 10")(nlevels(class)) }
            clPairs(data = Zpp, classification = class,
                    CEX = 1, colors = col, ...)
          }

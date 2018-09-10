@@ -1,6 +1,6 @@
-######################################################################################
-#     FUNCTION RETURNS THE MATRIX BASIS GIVEN A ENCODED FORM OF THE BASIS            #
-######################################################################################
+###################################################
+# MATRIX BASIS GIVEN AN ENCODED FORM OF THE BASIS #
+###################################################
 
 encodeBasis <- function(par, p, d, orth = TRUE, decomposition = c("QR","SVD"))
 {
@@ -74,7 +74,7 @@ NegentropyGMM <- function(G,
                           mean,
                           sigma,
                           sigmaGauss,
-                          method = c("UT", "VAR", "SOTE","MC"),
+                          method = c("UT", "VAR", "SOTE", "MC"),
                           nsamples = 1e5)
 {
   method <- match.arg(method, 
@@ -204,10 +204,4 @@ NegentropyMC <- function(par,
                  confint = c(Negentropy-z*EMC$se, Negentropy+z*EMC$se))
   return(output)
 }
-
-
-
-
-
-
 

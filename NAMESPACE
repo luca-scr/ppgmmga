@@ -19,13 +19,12 @@ S3method("plot", "ppgmmga")
 
 importFrom("stats", "prcomp")
 
-## Options
-#export(.ppgmmga.default,.ppgmm.plot.default)
-export(ppgmmga.options, ppgmmga.options.restore)
-#export(ppgmmga.plot.options)
+## options
+# export(.ppgmmga)
+export(ppgmmga.options)
 
 ## Functions
-export(EntropyGMM, NegentropyGMM, NegentropyPCA)
+export(EntropyGMM, NegentropyGMM)
 #export(encodeBasis)
-export(NegentropyPCA,NegentropyfastICA,NegentropyICA,NegentropyFA)
+#export(NegentropyPCA,NegentropyfastICA,NegentropyICA,NegentropyFA)
 

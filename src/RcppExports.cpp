@@ -6,21 +6,6 @@
 
 using namespace Rcpp;
 
-// EntropyVAR
-double EntropyVAR(int G, NumericVector pro, NumericMatrix mean, arma::cube sigma, int d);
-RcppExport SEXP _ppgmmga_EntropyVAR(SEXP GSEXP, SEXP proSEXP, SEXP meanSEXP, SEXP sigmaSEXP, SEXP dSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type G(GSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type pro(proSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< arma::cube >::type sigma(sigmaSEXP);
-    Rcpp::traits::input_parameter< int >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(EntropyVAR(G, pro, mean, sigma, d));
-    return rcpp_result_gen;
-END_RCPP
-}
 // EntropyUT
 double EntropyUT(int G, arma::vec pro, arma::mat mean, arma::cube sigma, double d);
 RcppExport SEXP _ppgmmga_EntropyUT(SEXP GSEXP, SEXP proSEXP, SEXP meanSEXP, SEXP sigmaSEXP, SEXP dSEXP) {
@@ -33,6 +18,21 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::cube >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
     rcpp_result_gen = Rcpp::wrap(EntropyUT(G, pro, mean, sigma, d));
+    return rcpp_result_gen;
+END_RCPP
+}
+// EntropyVAR
+double EntropyVAR(int G, NumericVector pro, NumericMatrix mean, arma::cube sigma, int d);
+RcppExport SEXP _ppgmmga_EntropyVAR(SEXP GSEXP, SEXP proSEXP, SEXP meanSEXP, SEXP sigmaSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type G(GSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pro(proSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< arma::cube >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< int >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(EntropyVAR(G, pro, mean, sigma, d));
     return rcpp_result_gen;
 END_RCPP
 }

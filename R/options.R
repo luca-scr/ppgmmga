@@ -1,89 +1,52 @@
+# Default options used in 'ppgmmga' package
 
-
-.ppgmmga.default = list("orth" = "QR",
-                        "popSize" = 100,
-                        "pcr" = 0.8,
-                        "pm" = 0.1,
-                        "maxiter" = 1000,
-                        "run" = 100,
-                        "optim" = TRUE,
-                        "selection" = gareal_lsSelection,
-                        "crossover" = gareal_laCrossover,
-                        "mutation" = gareal_raMutation,
-                        "parallel" = FALSE,
-                        "numIslands" = 4,
-                        "migrationRate" = 0.1,
-                        "migrationInterval" = 10,
-                        "optimMethod" = "L-BFGS-B",
-                        "poptim" = 0.05,
-                        "pressel" = 0.5,
-                        "fnscale" = -1,
-                        "maxit" = 100,
-                        "initMclust" = "SVD",
-                        "modelNames" = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EEV", "VEV", "EVV", "VVV","VEE"),
-                        "G" = 1:9
-
+.ppgmmga <- list(
+  # mclust 
+  modelNames = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EVE", "VEE", "VVE", "EEV", "VEV", "EVV", "VVV"),
+  G = 1:9,
+  initMclust = "SVD",
+  # GA
+  popSize = 100,
+  pcrossover = 0.8,
+  pmutation = 0.1,
+  maxiter = 1000,
+  run = 100,
+  selection = GA::gareal_lsSelection,
+  crossover = GA::gareal_laCrossover,
+  mutation = GA::gareal_raMutation,
+  parallel = FALSE,
+  numIslands = 4,
+  migrationRate = 0.1,
+  migrationInterval = 10,
+  # GA - local search
+  optim = TRUE, 
+  optimPoptim = 0.05,
+  optimPressel = 0.5,
+  optimMethod = "L-BFGS-B",
+  optimMaxit = 100,
+  # ppgmmga
+  orth = "QR"
 )
 
 ppgmmga.options <- function(...)
 {
-
-  temp <- .ppgmmga.default
-
-  if (nargs()==0)
-    return(temp)
-
-  op <- list(...)
-  if (length(op) == 1 && is.null(names(op))) {
-    arg <- op[[1]]
-    switch(mode(arg), list = op <- arg, character = return(.ppgmmga.default[[arg]]),
+  current <- get(".ppgmmga", envir = asNamespace("ppgmmga"))
+  if(nargs() == 0) return(current)
+  args <- list(...)
+  if(length(args) == 1 && is.null(names(args))) 
+  { arg <- args[[1]]
+    switch(mode(arg),
+           list = args <- arg,
+           character = return(.ppgmmga[[arg]]),
            stop("invalid argument: ", dQuote(arg)))
   }
-  if(any(sapply(op, is.list))){
-    opt.n <- names(op[[1]])
-    temp[opt.n] <- op[[1]]
-  } else {
-    opt.n <- names(op)
-    temp[opt.n] <- op
-  }
-
-  if (sys.parent() == 0) env <- asNamespace("ppgmmga") else env <- parent.frame()
-  assign(".ppgmmga.default", temp, envir = env)
-  invisible(temp)
+  if(length(args) == 0) return(current)
+  n <- names(args)
+  if(is.null(n)) stop("options must be given by name")
+  current[n] <- args
+  # browser()
+  if(sys.nframe() == 1) 
+    assign(".ppgmmga", current, envir = asNamespace("ppgmmga"))
+  invisible(current)
 }
-
-ppgmmga.options.restore <- function()
-{
-  restorealg <- list("orth" = "QR",
-                     "popSize" = 100,
-                     "pcr" = 0.8,
-                     "pm" = 0.1,
-                     "maxiter" = 1000,
-                     "run" = 100,
-                     "optim" = TRUE,
-                     "selection" = gareal_lsSelection,
-                     "crossover" = gareal_laCrossover,
-                     "mutation" = gareal_raMutation,
-                     "parallel" = FALSE,
-                     "numIslands" = 4,
-                     "migrationRate" = 0.1,
-                     "migrationInterval" = 10,
-                     "optimMethod" = "L-BFGS-B",
-                     "poptim" = 0.05,
-                     "pressel" = 0.5,
-                     "fnscale" = -1,
-                     "maxit" = 100,
-                     "initMclust" = "SVD",
-                     "modelNames" = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EEV", "VEV", "EVV", "VVV","VEE"),
-                     "G" = 1:9
-
-  )
-
-
-assign(".ppgmmga.default", restorealg, envir = asNamespace("ppgmmga"))
-invisible(restorealg)
-
-}
-
-
 

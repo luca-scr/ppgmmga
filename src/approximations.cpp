@@ -154,16 +154,13 @@ arma::vec gradient(arma::vec data,
   unsigned int d = mean.n_rows;
   arma::vec output; output.zeros(d);
 
-  for(int i=0; i<G; i++){
-
-
+  for(int i=0; i<G; i++)
+  {
     output = output +
-      arma::inv_sympd(sigma.slice(i)) *
-      (mean.col(i) - data) *
-      pro(i) *
-      dmvnrm(tradata, traM.row(i), sigma.slice(i));
-
-
+             arma::inv_sympd(sigma.slice(i)) *
+             (mean.col(i) - data) *
+             pro(i) *
+             dmvnrm(tradata, traM.row(i), sigma.slice(i));
   }
 
   return output;
@@ -174,11 +171,12 @@ arma::vec gradient(arma::vec data,
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-arma::mat F (arma::vec data,
-             int G,
-             arma::vec pro,
-             arma::mat mean,
-             arma::cube sigma){
+arma::mat F(arma::vec data,
+            int G,
+            arma::vec pro,
+            arma::mat mean,
+            arma::cube sigma)
+{
 
   arma::rowvec tradata = data.t();
   arma::mat traM = mean.t();
@@ -187,34 +185,76 @@ arma::mat F (arma::vec data,
   double MixtureDens = mixDensity(tradata,G, pro, mean,sigma);
   arma::vec grad = gradient(data, G, pro, mean, sigma);
   arma::mat I; I.eye( d, d );
-  for(int i=0; i<G; i++){
-
+  
+  for(int i=0; i<G; i++)
+  {
     output = output +
-      pro(i) *
-      arma::inv_sympd(sigma.slice(i)) *
-      (((1/MixtureDens) *
-      (data - mean.col(i)) *
-      grad.t()) +
-      ((data - mean.col(i)) *
-      arma::trans(arma::inv_sympd(sigma.slice(i)) *
-      (data - mean.col(i)))) - I) *
-      dmvnrm(tradata, traM.row(i), sigma.slice(i));
+             pro(i) *
+             arma::inv_sympd(sigma.slice(i)) *
+             (((1/MixtureDens) *
+             (data - mean.col(i)) *
+             grad.t()) +
+             ((data - mean.col(i)) *
+             arma::trans(arma::inv_sympd(sigma.slice(i)) *
+             (data - mean.col(i)))) - I) *
+             dmvnrm(tradata, traM.row(i), sigma.slice(i));
   }
 
   return (1/MixtureDens)*output;
-
-
 }
 
-//////////////////////////////////////////////////
-//            CLOSED FORM ENTROPY FOR GMMs      //
-//                                             //
-/////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//                 UT APPROXIMATION ENTROPY GMMS                        //
+//                                                                      //
+//  ARGS:                                                               //
+//                                                                      //
+//  G = Number of the GMM components                                    //
+//  pro = mixing proportions                                            //
+//  mean = mean   (note that we need a rowvector)                       //
+//  sigma = covariance matrix                                           //
+//  d = dimension of the data                                           //
+//////////////////////////////////////////////////////////////////////////
 
+//[[Rcpp::export]]
+
+double EntropyUT(int G,
+                 arma::vec pro,
+                 arma::mat mean,
+                 arma::cube sigma,
+                 double d)
+{
+
+  arma::mat u(d,d);  // for SVD function
+  arma::mat v(d,d);  // for SVD function
+  arma::vec D(d);    // for SVD function
+  arma::vec m(d);
+  double e = 0;
+  arma::vec temp1(d);
+  arma::vec temp2(d);
+  arma::vec temp3(d);
+  double en = 0;
+
+  for(int i=0; i<G; i++)
+  {
+    arma::svd_econ(u,D,v,sigma.slice(i));
+    m = mean.col(i);
+    for(int j=0; j<d; j++)
+    {
+      temp3 = (sqrt(d * D(j)) * u.col(j));
+      temp1 = m + temp3;
+      temp2 = m - temp3;
+      e =  e + (mixLogDensity(temp1.t(), G, pro, mean, sigma)) + (mixLogDensity(temp2.t(), G, pro, mean, sigma));
+    }
+    en = en + pro(i) * e;
+    e = 0;
+  }
+  
+  return -1.0/(2*d) * en;
+}
 
 
 //////////////////////////////////////////////////////////////////////////
-//                         VAR APPROXIMATION ENTROPY GMMS               //
+//                 VAR APPROXIMATION ENTROPY GMMS                       //
 //                                                                      //
 //  ARGS:                                                               //
 //                                                                      //
@@ -230,93 +270,26 @@ double EntropyVAR(int G,
                  NumericVector pro,
                  NumericMatrix mean,
                  arma::cube sigma,
-                 int d
-                 )
+                 int d)
 {
-
 
   double left = 0;
   double right = 0;
   double D=0;
 
-  for (int i=0; i<G; i++){
-
+  for (int i=0; i<G; i++)
+  {
     left=0;
-
-    for (int k=0; k<G; k++){
-
+    for (int k=0; k<G; k++)
+    {
       left = left + (pro[k] * exp(-KLMN(mean(_,i),sigma.slice(i),mean(_,k),sigma.slice(k))));
-
     }
 
-
-   right = right + pro[i] * 0.5 * log(pow(2*M_PI*exp(1),d) * arma::det(sigma.slice(i)));
-
-  	D = D + pro[i] * log(left) ;
-
+    right = right + pro[i] * 0.5 * log(pow(2*M_PI*exp(1),d) * arma::det(sigma.slice(i)));
+  	D = D + pro[i] * log(left);
   }
-
-
 
   return -(D - right);
-
-}
-
-//////////////////////////////////////////////////////////////////////////
-//                         VAR APPROXIMATION ENTROPY GMMS               //
-//                                                                      //
-//  ARGS:                                                               //
-//                                                                      //
-//  G = Number of the GMM components                                    //
-//  pro = mixing proportions                                            //
-//  mean = mean   (note that we need a rowvector)                       //
-//  sigma = covariance matrix                                           //
-//  d = dimension of the data                                           //
-//////////////////////////////////////////////////////////////////////////
-
-//[[Rcpp::export]]
-
-double EntropyUT(int G,
-          arma::vec pro,
-          arma::mat mean,
-          arma::cube sigma,
-          double d)
-{
-
-
-  const double k = 1/(2*d);
-
-  arma::mat u(d,d);  // for SVD function
-  arma::mat v(d,d); // for SVD function
-  arma::vec D(d);   // for SVD function
-  arma::vec m(d);
-  double e=0;
-  arma::vec temp1(d);
-  arma::vec temp2(d);
-  arma::vec temp3(d);
-  double en=0;
-
-  for(int i=0; i<G; i++){
-
-    arma::svd_econ(u,D,v,sigma.slice(i));
-    m = mean.col(i);
-
-
-    for(int j=0; j<d; j++)
-    {
-
-      temp3 = (sqrt(d * D(j)) * u.col(j));
-      temp1 = m + temp3;
-      temp2 = m - temp3;
-
-      e =  e + (mixLogDensity(temp1.t(), G, pro, mean, sigma)) + (mixLogDensity(temp2.t(), G, pro, mean, sigma));
-    }
-    en = en + pro(i) * e;
-    e = 0;
-
-  }
-  return -(k) * en;
-
 }
 
 
@@ -334,10 +307,10 @@ double EntropyUT(int G,
 
 //[[Rcpp::export]]
 double EntropySOTE(arma::mat data,
-               int G,
-               arma::vec pro,
-               arma::mat mean,
-               arma::cube sigma)
+                   int G,
+                   arma::vec pro,
+                   arma::mat mean,
+                   arma::cube sigma)
 {
 
   double output = 0;
@@ -353,9 +326,6 @@ double EntropySOTE(arma::mat data,
 
   return (-H - output);
 }
-
-
-
 
 
 //[[Rcpp::export]]
