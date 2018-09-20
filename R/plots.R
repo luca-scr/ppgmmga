@@ -2,8 +2,8 @@
 #                    PLOT PPGMMGA                                               #
 #################################################################################
 
-plot.ppgmmga <- function(object, class = NULL,
-                         dim = 1:object$d,
+plot.ppgmmga <- function(x, class = NULL,
+                         dim = 1:x$d,
                          drawAxis = TRUE, # if 2D
                          bins = nclass.Sturges, # if 1D
                          ...)
@@ -11,10 +11,10 @@ plot.ppgmmga <- function(object, class = NULL,
 
   d <- length(dim)
   d <- ifelse(d > 2,3,length(dim))
-  Zpp <- data.frame(object$Z[,dim,drop=FALSE])
+  Zpp <- data.frame(x$Z[,dim,drop=FALSE])
   znames <- colnames(Zpp)
-  if(is.null(colnames(object$data)))
-    colnames(object$data) <- paste0("X", seq(object$GMM$d))
+  if(is.null(colnames(x$data)))
+    colnames(x$data) <- paste0("X", seq(x$GMM$d))
 
   if(!is.null(class))
   { 
@@ -64,9 +64,9 @@ plot.ppgmmga <- function(object, class = NULL,
              gg <- gg + labs(shape = class.name, colour = class.name)
 
            if(drawAxis == TRUE)
-           { df2 <- data.frame(varnames = abbreviate(colnames(object$data), 5),
-                               x = object$basis[,1],
-                               y = object$basis[,2],
+           { df2 <- data.frame(varnames = abbreviate(colnames(x$data), 5),
+                               x = x$basis[,1],
+                               y = x$basis[,2],
                                stringsAsFactors = FALSE)
              mult <- min((max(Zpp[,1]) - min(Zpp[,1])/(max(df2$x)-min(df2$x))),
                          (max(Zpp[,2]) - min(Zpp[,2])/(max(df2$y)-min(df2$y))) )

@@ -1,76 +1,74 @@
 \name{ppgmmga}
 \alias{ppgmmga}
 \alias{print.ppgmmga}
-
 \title{
-Projection pursuit based on Gaussian mixtures and evolutionary algorithms for data visualisation}
+Projection Pursuit based on Gaussian Mixtures and Evolutionary Algorithms for data visualisation}
+
 \description{
-
-Cluster visualisation in multivariate data using an tailored projection pursuit algorithm. Gaussian mixture models and Genetic algorithms are employed to project the data and to underline cluster structures otherwise impossible to visualise.
-
-TODO: quasi sempre non usare \verb{\emph} ma \verb{\code} \cr
-Vedi \url{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Marking-text}
-e più in generale 
-\url{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Writing-R-documentation-files}
-}
+Cluster visualisation of multivariate data using an tailored Projection Pursuit algorithm. Gaussian Mixture Models and Genetic Algorithms are employed to project the data underling cluster structures otherwise impossible to visualise.}
 \usage{
 ppgmmga(data, 
         d, 
         approx = c("UT", "VAR", "SOTE"), 
         center = TRUE, 
-        scale = FALSE, 
+        scale = TRUE, 
         gmm = NULL, 
         gatype = c("ga", "gaisl"), 
-        opt = list(),
-        seed = NULL, ...)
+        options = ppgmmga.options(),
+        seed = NULL, 
+        verbose = interactive(), ...)
 }
-
 \arguments{
-  \item{data}{
-a \code{n x p} matrix containing the data with rows correspond to observations and columns correspond to variables. }
+  \item{data}{a \eqn{n x p} matrix containing the data with rows corresponding to observations and columns corresponding to variables. }
   \item{d}{
 the dimension of the subspace onto which the data are projected and visualised.}
   \item{approx}{
-the type of approximation to compute the Negentropy for GMM
-model.
+the type of approximation to compute the Negentropy for GMMs.
 Possible values are:
   \tabular{ll}{
 \code{"UT"} \tab for Unscented approximation. \cr
 \code{"VAR"} \tab for Variational approximation. \cr
-\code{"SOTE"} \tab for Second Order Taylor approximation. \cr
-\code{"MC"} \tab Monte Carlo approximation. LS: non sembra essere previsto... \cr}
+\code{"SOTE"} \tab for Second Order Taylor approximation. \cr}
 }
-  \item{center}{
-a logical value set to \code{TRUE} indicating whther or not the data are centred.
-\verb{LS: potrebbe aver senso passare un vettore di medie da usare in scale ?}
-}
-  \item{scale}{
-a logical value set to \code{FALSE} indicating whther or not the data are scaled.
-\verb{LS: potrebbe aver senso passare un vettore di std dev da usare in scale ?}
-}
-  \item{gmm}{
-An object of class \code{densityMclust}. This object contain an external estimate of the Gaussian mixture refered to the input data. The user can specify its own mixture estimates, providing a \code{densityMclust} object to pass to the function. See \code{Mclust} documentation for more details.}
-  \item{gatype}{
-the type of the genetic algoritm used to maximised the Negentropy.
+  \item{center}{a logical value set to \code{TRUE} indicating wheter or not the data are centred.}
+  
+  \item{scale}{a logical value set to \code{TRUE} indicating wheter or not the data are scaled.}
+  
+  \item{gmm}{an object of class \code{\link{densityMclust}}. This object contain an external estimate of the Gaussian mixture refered to the input data. The user can specify its own mixture estimates providing a \code{densityMclust} object to pass to the function. See \code{\link{Mclust}} documentation for more details.}
+  
+  \item{gatype}{the type of the genetic algoritm used to maximised the Negentropy.
 Possible values are:
   \tabular{ll}{
-\code{"ga"} \tab for genetic algorithm. \cr
-\code{"gaisl"} \tab for Island genetic algorithm. \cr}
-}
-  \item{opt}{
-A list of options for the density estimation and Genetic algorithms embedded in the function. This parameter collect all the important options to pass to \code{densityMclust} function of \code{Mclust} package for the density estimation, and to code{ga} function of \code{GA} package for genetic operator of the Genetic algorithm.}
+\code{"ga"} \tab for genetic algorithm (\code{\link{ga}}). \cr
+\code{"gaisl"} \tab for Island genetic algorithm \code{\link{gaisl}}. \cr}}
+  
+  \item{options}{a list of options containing all the important arguments to pass to \code{\link{densityMclust}} function of \code{\link{Mclust}} package, and to \code{\link{ga}} function of \code{GA} package. See \code{\link{ppgmmga.options}} for the available options. The \code{options} argument does not change the global options in \code{ppgmmga.options}, but only the options for the single call to \code{ppgmmga}.}
+  
   \item{seed}{an integer value with the random number generator state. It may be used to replicate the results of ppgmmga algorithm.}
+  
+  \item{verbose}{a logical value controlling if the evolution of GA search is shown. By default is \code{TRUE} reporting the number of iteration, average and best fitness value.}
+  
   \item{\dots}{
 additional arguments.
 }
 }
 \details{
-Projection pursuit (PP) is a features extraction method for analysing high-dimensional data with low-dimension projections, by maximising a projection index to find out the best orthogonal projections. A general PP procedure can be summarised in few steps: the data may be transformed, usually sphered, the PP index is chosen and the subspace dimension is fixed. Then, the PP index is optimised.
+Projection pursuit (PP) is a features extraction method for analysing high-dimensional data with low-dimension projections by maximising a projection index to find out the best orthogonal projections. A general PP procedure can be summarised in few steps: the data may be transformed, the PP index is chosen and the subspace dimension is fixed. Then, the PP index is optimised.
 
-For clusters visualisation the Negentropy index has been considerd. Since such index requires an estimation of the underling data density, Gaussian mixture models (GMMs) has been used to approximate such density.  GMMs do not have a closed formula for the Negentropy and different closed formula approximations have been implemented. Genetic algorithms have been employed to maximised the approximated Negentropy respect to the system of basis in the desidered subspace.}
-\value{
-Returns an object of class \code{ppgmmga-class}. See \code{\link{ppgmmga-class}} for a description of the object.
+For clusters visualisation the Negentropy index has been considerd. Since such index requires an estimation of the underling data density, Gaussian mixture models (GMMs) has been used to approximate such density.  GMMs do not have a closed formula for the Negentropy and different closed formula approximations have been implemented. Genetic Algorithms have been employed to maximised the approximated Negentropy respect to the system of basis in the desidered subspace.
 }
+\value{
+Returns an object of class \code{ppgmmga}. See \code{\link{ppgmmga-class}} for a description of the object.
+}
+
+
+\author{
+Serafini A. \email{srf.alessio@gmail.com}
+
+Scrucca L. \email{luca.scrucca@unipg.it}
+
+}
+
 \references{
 Goldberger, J. and Aronowitz, H. (2005). \emph{A distance measure between gmms based on
 the unscented transform and its application to speaker recognition}. In INTERSPEECH,
@@ -85,20 +83,20 @@ Huber, P. J. (1985). \emph{Projection pursuit}. The Annals of Statistics, pages 
 Huber, M. F., Bailey, T., Durrant-Whyte, H., and Hanebeck, U. D. (2008). \emph{On entropy
 approximation for Gaussian mixture random vectors}. In Multisensor Fusion and Integra-
 tion for Intelligent Systems, 2008. MFI 2008. IEEE International Conference on, pages
-181–188. IEEE.}
-\author{
-Serafini A. \email{srf.alessio@gmail.com}
+181–188. IEEE.
+Jones, M. C. and Sibson, R. (1987). \emph{What is projection pursuit? (with discussion).} Journal of the Royal Statistical Society. Series A (General), pages 1–37.
 
-Scrucca L. \email{luca.scrucca@unipg.it}
+Kruskal, J. B. (1969). \emph{Toward a practical method which helps uncover the structure of a set of multivariate observations by finding the linear transformation which optimizes a new index of condensation.} In Milton, R. C. and Nelder, J. A., editors, Statistical Computation, pages 427–440. Academic Press, New York.
 }
-
 
 \seealso{
-\code{\link{summary.ppgmmga},\code{\link{plot.ppgmmga}},\code{\link{ppgmmga-class}}}
+\code{\link{summary.ppgmmga}}, \code{\link{plot.ppgmmga}}, \code{\link{ppgmmga-class}}
 }
 \examples{
+\dontrun{
+require(mclust)
 data(iris)
-X <- iris[,-5]
+X = iris[,-5]
 Class <- iris$Species
 
 # Unscented Transformation
@@ -117,9 +115,10 @@ pp3 <- ppgmmga(data = X, d = 2, approx = "SOTE")
 summary(pp3, check = TRUE)
 plot(pp3, Class)
 
-# Changing the size of the initial population in the general options
+# Changing the initial population size
 pp4 <- ppgmmga(data = X, d = 2, opt = list("popSize" = 10))
 }
+}
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

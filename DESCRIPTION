@@ -7,12 +7,14 @@ Authors@R: c(person("Alessio", "Serafini", role = c("aut", "cre"),
                     email = "srf.alessio@gmail.com"),
              person("Luca", "Scrucca", role = c("aut"),
                     email = "luca.scrucca@unipg.it"))
-Depends: R (>= 3.0)
+Depends: R (>= 3.4)
 Imports: Rcpp (>= 0.12.5), mclust (>= 5.0), GA (>= 3.1), 
          ggplot2 (>= 2.2.1), ggthemes (>= 3.4.0),
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7)
+Suggests: knitr (>= 1.8)
 License: GPL (>= 2)
 URL: https://www.serafinialessio.it/, http://www.stat.unipg.it/luca/
+VignetteBuilder: knitr
 ByteCompile: true
 Repository: CRAN
 ByteCompile: true

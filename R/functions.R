@@ -16,11 +16,11 @@ encodeBasis <- function(par, p, d, orth = TRUE, decomposition = c("QR","SVD"))
 # ENTROPY FOR THE GAUSSIAN MIXTURE MODELS #
 ###########################################
 
-EntropyGMM <- function(G, 
-                       d,
+EntropyGMM <- function(G,
                        pro,
                        mean,
-                       sigma,
+                       sigma, 
+                       d,
                        method = c("UT", "VAR", "SOTE","MC"),
                        nsamples = 1e5)
 {
@@ -69,18 +69,18 @@ EntropyGMM <- function(G,
 ##############################################
 
 NegentropyGMM <- function(G,
-                          d,
                           pro,
                           mean,
                           sigma,
-                          sigmaGauss,
+                          cov,
+						  d,
                           method = c("UT", "VAR", "SOTE", "MC"),
                           nsamples = 1e5)
 {
   method <- match.arg(method, 
                       choices = eval(formals(NegentropyGMM)$method))
-  if(d != nrow(sigmaGauss) | d != ncol(sigmaGauss))
-    { stop("The dimension of sigmaGauss does not match that of GMM parameters!") }
+  if(d != nrow(cov) | d != ncol(cov))
+    { stop("The dimension of cov does not match that of GMM parameters!") }
   
   if(d == 1)
   {
@@ -114,11 +114,11 @@ NegentropyGMM <- function(G,
 
   if(method != "MC")
   {
-    Negentropy <- -Entropy[[1]] + EntropyGauss(S = sigmaGauss, d = d)
+    Negentropy <- -Entropy[[1]] + EntropyGauss(S = cov, d = d)
     se <- NA
   } else
   {
-    Negentropy <- -Entropy[[1]] + EntropyGauss(S = sigmaGauss, d = d)
+    Negentropy <- -Entropy[[1]] + EntropyGauss(S = cov, d = d)
     se <- Entropy$se
   }
 

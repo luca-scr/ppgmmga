@@ -1,0 +1,128 @@
+---
+title: "ppgmmga"
+author: 
+- Alessio Serafini, Luca Scrucca
+date: "`r format(Sys.time(), '%d %b %Y')`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: false
+vignette: >
+  %\VignetteIndexEntry{A quick tour of GA}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(fig.align = "center", 
+               # out.width = "90%",
+               fig.width = 5, fig.height = 4.5,
+               dev.args=list(pointsize=8),
+               par = TRUE, # needed for setting hook 
+               collapse = TRUE, # collapse input & ouput code in chunks
+               warning = FALSE)
+
+knit_hooks$set(par = function(before, options, envir)
+  { if(before && options$fig.show != "none") 
+       par(family = "sans", mar=c(4.1,4.1,1.1,1.1), mgp=c(3,1,0), tcl=-0.5)
+})
+```
+
+# Introduction 
+
+```{r, message = FALSE, echo=1}
+library(ppgmmga)
+cat(ppgmmga:::ppgmmgaStartupMessage(), sep="")
+```
+
+
+# Projection Pursuit based on GMMs and GA
+
+
+
+## Banknote data
+```{r}
+library(mclust)
+data("banknote")
+X <- banknote[,-1]
+Class <- banknote$Status
+table(Class)
+clPairs(X, classification = Class)
+```
+
+## 1 dimensional ppgmmga
+```{r, cache=TRUE}
+pp1D <- ppgmmga(data = X, d = 1, approx = "UT", seed = 1)
+pp1D
+summary(pp1D)
+plot(pp1D)
+```
+
+## 2 dimensional ppgmmga
+```{r, cache=TRUE}
+pp2D <- ppgmmga(data = X, d = 2, approx = "UT", seed = 1)
+summary(pp2D,check = TRUE)
+summary(pp2D$GMM)
+plot.Mclust(pp2D$GMM, what = "classification")
+summary(pp2D$GA)
+plot(pp2D$GA)
+plot(pp2D)
+plot(pp2D, class = Class, drawAxis = FALSE)
+```
+
+## 3 dimension ppgmmga
+```{r, cache=TRUE}
+gmm <- densityMclust(data = scale(X, center = TRUE, scale = FALSE), G = 2)
+pp3D <- ppgmmga(data = X, d = 3, scale = FALSE, gmm = gmm, gatype = "gaisl", options = ppgmmga.options(numIslands = 2, parallel = TRUE),seed = 1)
+summary(pp3D$GA)
+plot(pp3D$GA)
+plot(pp3D)
+plot(pp3D, class = Class)
+plot(pp3D, dim = c(1,2))
+```
+
+# Entropy for GMMs 
+```{r, cache=TRUE}
+EntropyUT <- EntropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, d = gmm$d, method = "UT")
+EntropyMC <- EntropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, d = gmm$d, method = "MC")
+c(EntropyUT, EntropyMC)
+```
+
+# Negentropy for GMMs
+
+```{r, cache=TRUE}
+NegentropyUT <- NegentropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, cov  = cov(X) ,d = gmm$d, method = "UT")
+NegentropyMC <- NegentropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, cov  = cov(X) ,d = gmm$d, method = "MC")
+c(NegentropyUT, NegentropyMC)
+```
+
+```{r}
+gmm1 <- densityMclust(data = X, G = 1)
+NegentropyUT1 <- NegentropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, cov  = cov(X) ,d = gmm$d, method = "UT")
+NegentropyUT1
+```
+
+
+
+# References
+
+Goldberger, J. and Aronowitz, H. (2005). *A distance measure between GMMs based on
+the unscented transform and its application to speaker recognition.* In INTERSPEECH,
+pages 1985–1988. Citeseer.
+
+Hershey, J. R. and Olsen, P. A. (2007). *Approximating the Kullback Leibler divergence
+between Gaussian mixture models.* In 2007 IEEE International Conference on Acoustics,
+Speech and Signal Processing-ICASSP’07, volume 4, pages IV–317. IEEE.
+
+Huber, P. J. (1985). *Projection pursuit*. The Annals of Statistics, pages 435–475.
+
+Huber, M. F., Bailey, T., Durrant-Whyte, H., and Hanebeck, U. D. (2008). *On entropy
+approximation for Gaussian mixture random vectors.* In Multisensor Fusion and Integra-
+tion for Intelligent Systems, 2008. MFI 2008. IEEE International Conference on, pages
+181–188. IEEE.
+
+Jones, M. C. and Sibson, R. (1987). *What is projection pursuit? (with discussion).* Journal of the Royal Statistical Society. Series A (General), pages 1–37.
+
+Kruskal, J. B. (1969). *Toward a practical method which helps uncover the structure of a set of multivariate observations by finding the linear transformation which optimizes a new index of condensation.* In Milton, R. C. and Nelder, J. A., editors, Statistical Computation, pages 427–440. Academic Press, New York.
+

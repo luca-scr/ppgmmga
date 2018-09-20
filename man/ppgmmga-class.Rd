@@ -7,7 +7,7 @@ Class \code{"ppgmmga"}}
 An S3 class object for ppgmmga algorithm.}
 
 \section{Objects from the class}{
-Objects can be created by calls to the \code{\link{ppgmmga}} function.
+Object can be created by calls the \code{\link{ppgmmga}} function.
 }
 
 \section{Values}{
@@ -15,23 +15,23 @@ Objects can be created by calls to the \code{\link{ppgmmga}} function.
 \describe{
 \item{data}{The original data.}
 \item{d}{The subspace dimension.}
-\item{approx}{The type of approximation used.}
-\item{GMM}{Object of class \code{"mclust"} with the infomration for  GMM density estimations.}
-\item{GA}{Object of class \code{"ga"} with the information from the genetic algorithm search. }
+\item{approx}{The type of approximation.}
+\item{GMM}{Object of class \code{"mclust"} with GMM density estimations. See \code{\link{Mclust}} for details.}
+\item{GA}{Object of class \code{"ga"} with the GA search. See \code{\link{ga}} for details.}
 \item{Negentropy}{The value of maximised Negentropy.}
 \item{basis}{The basis of subspace.}
 \item{Z}{The projected data.}
 }
-
 }
 
 \author{
 Serafini A. \email{srf.alessio@gmail.com}
 
 Scrucca L. \email{luca.scrucca@unipg.it}
+
 }
 
 \keyword{classes}
 
-\seealso{\code{\link{ppgmmga}}}
+\seealso{\code{\link{ppgmmga}}, \code{\link{plot.ppgmmga}}, \code{\link{summary.ppgmmga}}}
 
