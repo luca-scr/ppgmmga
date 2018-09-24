@@ -209,9 +209,11 @@ print.summary.ppgmmga <- function(x, digits = getOption("digits"), ...)
   if(is.null(dotargs$chead)) dotargs$chead <- 10
   if(is.null(dotargs$ctail)) dotargs$ctail <- 2
   
-  cat("-------------------------------------------------------","\n")
-  cat("Projection Pursuit GMM estimated via Genetic Algorithms","\n")
-  cat("-------------------------------------------------------","\n\n")
+  # cat("-------------------------------------------------------","\n")
+  # cat("Projection Pursuit GMM estimated via Genetic Algorithms","\n")
+  # cat("-------------------------------------------------------","\n\n")
+  cat(cli::rule(left = crayon::bold("ppgmmga"), 
+                width = min(getOption("width"),40)), "\n\n")
 
   cat(paste("Data dimensions               =", x$n, "x", x$p, "\n"))
   cat(paste("Data transformation           = "))

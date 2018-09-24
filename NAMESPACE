@@ -4,12 +4,15 @@ useDynLib("ppgmmga", .registration = TRUE)
 #importFrom("Rcpp", evalCpp)
 importFrom("Rcpp", sourceCpp)
 #import("RcppArmadillo")
+importFrom("stats", "prcomp")
 
 import("mclust", "GA", "ggplot2", "ggthemes")
 importFrom("grDevices", "nclass.Sturges")
 importFrom("stats", "princomp", "qchisq", "qnorm")
 importFrom("utils", "packageVersion")
-  
+importFrom("cli", "rule")
+importFrom("crayon", "bold")
+
 export(ppgmmga, print.ppgmmga, summary.ppgmmga,
        print.summary.ppgmmga, plot.ppgmmga)
 S3method("print", "ppgmmga")
@@ -17,14 +20,6 @@ S3method("summary", "ppgmmga")
 S3method("print", "summary.ppgmmga")
 S3method("plot", "ppgmmga")
 
-importFrom("stats", "prcomp")
-
-## options
-# export(.ppgmmga)
 export(ppgmmga.options)
 
-## Functions
-export(EntropyGMM, NegentropyGMM)
-#export(encodeBasis)
-#export(NegentropyPCA,NegentropyfastICA,NegentropyICA,NegentropyFA)
 

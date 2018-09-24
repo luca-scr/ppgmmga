@@ -1,0 +1,20 @@
+citHeader("To cite 'ppgmmga' R package in publications, please use:")
+
+citEntry(entry = "Article",
+  title        = "Projection pursuit based on Gaussian mixtures and evolutionary algorithms",
+  author       = personList(person(given="Luca", family="Scrucca"),
+                            person(given="Alessio", family="Serafini")),
+  journal      = "Under review",
+  year         = "2018",
+  # volume       = "53",
+  # number       = "4",
+  # pages        = "1--37",
+  # url          = "http://www.jstatsoft.org/v53/i04/",
+  #
+  textVersion  =
+  paste("Scrucca, L. and Serafini, A. (2018).",
+        "Projection pursuit based on Gaussian mixtures and evolutionary algorithms",
+        "Under review"
+        # "URL http://www.jstatsoft.org/v53/i04/"
+        )
+)

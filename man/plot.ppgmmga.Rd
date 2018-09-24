@@ -1,66 +1,75 @@
 \name{plot.ppgmmga}
 \docType{methods}
 \alias{plot.ppgmmga}
-\title{
-Plot method for \code{ppgmmga}}
-\description{
-Plots the data onto the subspace by appling the ppgmmga algorithm.}
+
+\title{Plots the data onto the projection subspace estimated by the ppgmmga algorithm}
+
+\description{Plot method for objects of class \code{'ppgmmga'}.}
+
 \usage{
 \method{plot}{ppgmmga}(x, 
-                       class = NULL, 
-                       dim = 1:x$d, 
-                       drawAxis = TRUE, 
-                       bins = nclass.Sturges,...)
+     class = NULL, 
+     dim = seq(x$d), 
+     drawAxis = TRUE, 
+     bins = nclass.Sturges,
+     \dots)
 }
+
 \arguments{
-  \item{x}{output from \code{ppgmmga}.}
-  \item{class}{a numeric or character vector indicating the classification of the observations.}
-  \item{dim}{ numeric vector indicating the dimensions to plot when the subspace dimension is greater that 3 (\code{p > 3}). The defaulting value is set to \code{1:x$d}, i.e. a scatterplot matrix of projected data. }
-  \item{drawAxis}{a logical defaulting to \code{TRUE}. If set a \code{TRUE} the projected axis are include in the plot.}
-  \item{bins}{a R function to compute the number of classes for the histogram. \code{nclass.Sturges} is used by default. For more detail on \code{nclass.Sturges} and other methods look at \code{\link{nclass.Sturges}} help. User may provide a different function. 
-For multivariate projections such argument is ignored.}
+  \item{x}{An object of class \code{'ppgmmga'} obtained from a call to \code{\link{ppgmmga}} function.}
+  \item{class}{A numeric or character vector indicating the classification of the observations/cases to be plotted.}
+  \item{dim}{A numeric vector indicating the dimensions to use for plotting. 
+  By default, all the dimensions of the projection subspace (i.e. \code{x$d}) are used. Subsets of all the available dimensions can also be provided (see example below.)\cr
+  The resulting graph depends on the dimension: in the 1D case a histogram is provided, a scatterplot in the 2D case, a scatterplot matrix in higher dimensions.
+  }
+  \item{drawAxis}{A logical value specifying whether or not the axes should be included in the 2D scatterplot. By default is to \code{TRUE}.}
+  \item{bins}{An R function to be used for computing the number of classes for the histogram. By default \code{nclass.Sturges} is used; see \code{\link{nclass.Sturges}} for more details. Users may provide a different function. This argument only applies to 1D graphs.}
   \item{\dots}{further arguments.}
 }
+
 \details{
 Plots the cloud of points onto a subspace after appling the Projection Pursuit algorithm based on Gaussian mixtures and Genetic algorithm implemented in \code{ppgmmga} function.}
+
 \value{
 Returns a object of class \code{\link{ggplot}}.
 }
 
 \author{
-Serafini A. \email{srf.alessio@gmail.com}
-
+Serafini A. \email{srf.alessio@gmail.com}\cr
 Scrucca L. \email{luca.scrucca@unipg.it}
-
 }
 
-\seealso{
-\code{\link{ppgmmga}}}
+\references{
+Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. \emph{Under review}.
+}
 
+\seealso{\code{\link{ppgmmga}}}
 
 \examples{
 \dontrun{
-require(mclust)
 data(iris)
-X = iris[,-5]
-Class = iris$Species
+X <- iris[,-5]
+Class <- iris$Species
 
-pp = ppgmmga(data = X, d = 2)
-plot(pp)
+# 1D
+pp1 <- ppgmmga(data = X, d = 1, approx = "UT")
+summary(pp1, check = TRUE)
+plot(pp1)
+plot(pp1, Class)
 
-# Plot with classes
+# 2D
+pp2 <- ppgmmga(data = X, d = 2, approx = "UT")
+summary(pp2, check = TRUE)
+plot(pp2)
+plot(pp2, Class)
 
-Class = iris[,5]
-plot(pp, class = Class)
-
-# 3d projection
-
-pp = ppgmmga(data = X, d = 3)
-plot(pp)
-
-# Second and third dimension
-
-plot(pp, dim = c(2,3))
+# 3D
+pp3 <- ppgmmga(data = X, d = 3)
+summary(pp3, check = TRUE)
+plot(pp3)
+plot(pp3, Class)
+plot(pp3, Class, dim = c(1,3))
+plot(pp3, Class, dim = c(2,3))
 }
 }
 

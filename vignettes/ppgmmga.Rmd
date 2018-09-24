@@ -1,5 +1,5 @@
 ---
-title: "ppgmmga"
+title: "A quick tour of ppgmmga"
 author: 
 - Alessio Serafini, Luca Scrucca
 date: "`r format(Sys.time(), '%d %b %Y')`"
@@ -7,8 +7,9 @@ output:
   rmarkdown::html_vignette:
     toc: true
     number_sections: false
+    css: "vignette.css"
 vignette: >
-  %\VignetteIndexEntry{A quick tour of GA}
+  %\VignetteIndexEntry{A quick tour of ppgmmga}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -31,17 +32,15 @@ knit_hooks$set(par = function(before, options, envir)
 
 # Introduction 
 
+An R package implementing a Projection Pursuit algorithm based on finite Gaussian mixtures models for density estimation using Genetic Algorithms to maximise an approximated Negentropy index. The **ppgmmga** algorithm provides a method to visualise high-dimensional data in a lower-dimensional space.
+
 ```{r, message = FALSE, echo=1}
 library(ppgmmga)
 cat(ppgmmga:::ppgmmgaStartupMessage(), sep="")
 ```
 
+# Banknote data
 
-# Projection Pursuit based on GMMs and GA
-
-
-
-## Banknote data
 ```{r}
 library(mclust)
 data("banknote")
@@ -51,78 +50,47 @@ table(Class)
 clPairs(X, classification = Class)
 ```
 
-## 1 dimensional ppgmmga
-```{r, cache=TRUE}
+# ppgmmga
+
+## 1-dimensional ppgmmga
+
+```{r}
 pp1D <- ppgmmga(data = X, d = 1, approx = "UT", seed = 1)
 pp1D
 summary(pp1D)
 plot(pp1D)
+plot(pp1D, class = Class)
 ```
 
-## 2 dimensional ppgmmga
-```{r, cache=TRUE}
+## 2-dimensional ppgmmga
+
+```{r}
 pp2D <- ppgmmga(data = X, d = 2, approx = "UT", seed = 1)
-summary(pp2D,check = TRUE)
+summary(pp2D, check = TRUE)
 summary(pp2D$GMM)
-plot.Mclust(pp2D$GMM, what = "classification")
-summary(pp2D$GA)
 plot(pp2D$GA)
 plot(pp2D)
 plot(pp2D, class = Class, drawAxis = FALSE)
 ```
 
-## 3 dimension ppgmmga
-```{r, cache=TRUE}
+## 3-dimensional ppgmmga
+
+```{r}
 gmm <- densityMclust(data = scale(X, center = TRUE, scale = FALSE), G = 2)
-pp3D <- ppgmmga(data = X, d = 3, scale = FALSE, gmm = gmm, gatype = "gaisl", options = ppgmmga.options(numIslands = 2, parallel = TRUE),seed = 1)
+pp3D <- ppgmmga(data = X, d = 3, 
+                center = TRUE, scale = FALSE, gmm = gmm, 
+                gatype = "gaisl", 
+                options = ppgmmga.options(numIslands = 2),
+                seed = 1)
 summary(pp3D$GA)
 plot(pp3D$GA)
 plot(pp3D)
 plot(pp3D, class = Class)
 plot(pp3D, dim = c(1,2))
+plot(pp3D, dim = c(1,3), class = Class)
 ```
-
-# Entropy for GMMs 
-```{r, cache=TRUE}
-EntropyUT <- EntropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, d = gmm$d, method = "UT")
-EntropyMC <- EntropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, d = gmm$d, method = "MC")
-c(EntropyUT, EntropyMC)
-```
-
-# Negentropy for GMMs
-
-```{r, cache=TRUE}
-NegentropyUT <- NegentropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, cov  = cov(X) ,d = gmm$d, method = "UT")
-NegentropyMC <- NegentropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, cov  = cov(X) ,d = gmm$d, method = "MC")
-c(NegentropyUT, NegentropyMC)
-```
-
-```{r}
-gmm1 <- densityMclust(data = X, G = 1)
-NegentropyUT1 <- NegentropyGMM(G = gmm$G, pro = gmm$parameters$pro, mean = gmm$parameters$mean, sigma = gmm$parameters$variance$sigma, cov  = cov(X) ,d = gmm$d, method = "UT")
-NegentropyUT1
-```
-
 
 
 # References
 
-Goldberger, J. and Aronowitz, H. (2005). *A distance measure between GMMs based on
-the unscented transform and its application to speaker recognition.* In INTERSPEECH,
-pages 1985–1988. Citeseer.
-
-Hershey, J. R. and Olsen, P. A. (2007). *Approximating the Kullback Leibler divergence
-between Gaussian mixture models.* In 2007 IEEE International Conference on Acoustics,
-Speech and Signal Processing-ICASSP’07, volume 4, pages IV–317. IEEE.
-
-Huber, P. J. (1985). *Projection pursuit*. The Annals of Statistics, pages 435–475.
-
-Huber, M. F., Bailey, T., Durrant-Whyte, H., and Hanebeck, U. D. (2008). *On entropy
-approximation for Gaussian mixture random vectors.* In Multisensor Fusion and Integra-
-tion for Intelligent Systems, 2008. MFI 2008. IEEE International Conference on, pages
-181–188. IEEE.
-
-Jones, M. C. and Sibson, R. (1987). *What is projection pursuit? (with discussion).* Journal of the Royal Statistical Society. Series A (General), pages 1–37.
-
-Kruskal, J. B. (1969). *Toward a practical method which helps uncover the structure of a set of multivariate observations by finding the linear transformation which optimizes a new index of condensation.* In Milton, R. C. and Nelder, J. A., editors, Statistical Computation, pages 427–440. Academic Press, New York.
-
+Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. Under review.
