@@ -1,9 +1,10 @@
 Package: ppgmmga
 Version: 1.0
-Date: 2018-09-24
+Date: 2018-09-25
 Title: Projection Pursuit Based on Gaussian Mixtures and Evolutionary Algorithms
 Description: Projection Pursuit (PP) algorithm for dimension reduction based on Gaussian Mixture Models (GMMs) for density estimation using Genetic Algorithms (GAs) to maximise an approximated negentropy index.
 Authors@R: c(person("Alessio", "Serafini", role = c("aut", "cre"),
+                    comment = c(ORCID = "0000-0002-8579-5695"),
                     email = "srf.alessio@gmail.com"),
              person("Luca", "Scrucca", role = c("aut"),
                     comment = c(ORCID = "0000-0003-3826-0484"),
