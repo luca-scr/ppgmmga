@@ -38,7 +38,7 @@ ppgmmga(data,
   \item{gatype}{A string specifying the type of genetic algoritm to be used to maximised the negentropy. Possible values are:
   \tabular{ll}{
 \code{"ga"} \tab for simple genetic algorithm (\code{\link{ga}}). \cr
-\code{"gaisl"} \tab for island genetic algorithm \code{\link{gaisl}}. \cr}
+\code{"gaisl"} \tab for island genetic algorithm (\code{\link{gaisl}}). \cr}
 }
   
   \item{options}{A list of options containing all the important arguments to pass to \code{\link{densityMclust}} function of the \pkg{mclust} package, and to \code{\link{ga}} function of the \pkg{GA} package. See \code{\link{ppgmmga.options}} for the available options. Note that by setting the \code{options} argument does not change the global options provided by \code{ppgmmga.options}, but only the options for a single call to \code{ppgmmga}.}

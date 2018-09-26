@@ -11,7 +11,7 @@ Set or retrieve default values to be used by the \pkg{ppgmmga} package.
 \usage{ppgmmga.options(\dots)}
 
 \arguments{
-\item{\dots}{A single character vector, or a named list with components. In the one argument case, the form \code{name = value} can be used to change a single option. In the multiple arguments cas, the form \code{list(name1 = value1, name2 = value2)} can be used to change several arguments. If no arguments are provided, then the function returns all the current options. 
+\item{\dots}{A single character vector, or a named list with components. In the one argument case, the form \code{name = value} can be used to change a single option. In the multiple arguments case, the form \code{list(name1 = value1, name2 = value2)} can be used to change several arguments. If no arguments are provided, then the function returns all the current options. 
 For the available options see the Details section below.}
 }
 
