@@ -77,35 +77,6 @@ double logsumexp(arma::vec x)
   return lse;
 }
 
-//////////////////////////////////////////////////////////////////////////
-//                         LOG DENSITY OF GMM                           //
-//                                                                      //
-//  ARGS:                                                               //
-//                                                                      //
-//  data = data (note that we need a rowvector)                         //
-//  G = Number of the GMM components                                    //
-//  pro = mixing proportions                                            //
-//  mean = mean   (note that we need a rowvector)                       //
-//  sigma = covariance matrix                                           //
-//////////////////////////////////////////////////////////////////////////
-
-double mixLogDensity(arma::rowvec data,
-                     int G,
-                     arma::vec pro,
-                     arma::mat mean,
-                     arma::cube sigma)
-{
-
-  arma::mat  m = mean.t();
-  arma::vec  dens; dens.zeros(G);
-
-  for(int i=0; i<G; i++)
-  {
-    dens(i) = log(pro(i)) + dmvnrm(data, m.row(i), sigma.slice(i), true);
-  }
-
-  return logsumexp(dens);
-}
 
 //////////////////////////////////////////////////////////////////////////
 //                         GMMs DENSITY                                 //
@@ -117,23 +88,33 @@ double mixLogDensity(arma::rowvec data,
 //  pro = mixing proportions                                            //
 //  mean = mean   (note that we need a rowvector)                       //
 //  sigma = covariance matrix                                           //
+//  logarithm = if log density or normal scale                          //
 //////////////////////////////////////////////////////////////////////////
 double mixDensity(arma::rowvec data,
                   int G,
                   arma::vec pro,
                   arma::mat mean,
-                  arma::cube sigma)
+                  arma::cube sigma,
+                  bool logarithm = false)
 {
-
-  arma::mat m = mean.t();
-  double    dens = 0;
-
+  
+  arma::mat  m = mean.t();
+  arma::vec  dens; dens.zeros(G);
+  double out; out = 0;
+  
   for(int i=0; i<G; i++)
   {
-    dens = dens + pro(i) * dmvnrm(data, m.row(i), sigma.slice(i));
+    dens(i) = log(pro(i)) + dmvnrm(data, m.row(i), sigma.slice(i), true);
   }
-
-  return dens;
+  
+  out = logsumexp(dens);
+    
+    if(logarithm == false)
+    {
+      out = exp(out);
+    }
+    
+    return out;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -243,7 +224,7 @@ double EntropyUT(int G,
       temp3 = (sqrt(d * D(j)) * u.col(j));
       temp1 = m + temp3;
       temp2 = m - temp3;
-      e =  e + (mixLogDensity(temp1.t(), G, pro, mean, sigma)) + (mixLogDensity(temp2.t(), G, pro, mean, sigma));
+      e =  e + (mixDensity(temp1.t(), G, pro, mean, sigma, true)) + (mixDensity(temp2.t(), G, pro, mean, sigma, true));
     }
     en = en + pro(i) * e;
     e = 0;
@@ -320,7 +301,7 @@ double EntropySOTE(arma::mat data,
 
   for(int i=0; i<G; i++)
   {
-    H = H + pro(i) * mixLogDensity(tranmean.row(i), G, pro, mean, sigma);
+    H = H + pro(i) * mixDensity(tranmean.row(i), G, pro, mean, sigma, true);
     output = output +  (pro(i)/2) * (accu( F(mean.col(i), G, pro, mean, sigma) % sigma.slice(i)));
   }
 
@@ -343,7 +324,7 @@ List EntropyMCapprox(arma::mat data,
 
   for(int i=0; i<n; i++)
   {
-    out(i) = mixLogDensity(data.row(i), G, pro, mean, sigma);
+    out(i) = mixDensity(data.row(i), G, pro, mean, sigma, true);
   }
 
   ent = -1.0*arma::mean(out);

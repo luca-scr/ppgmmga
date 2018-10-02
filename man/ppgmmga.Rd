@@ -72,16 +72,17 @@ Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixture
 \code{\link{summary.ppgmmga}}, \code{\link{plot.ppgmmga}}, \code{\link{ppgmmga-class}}
 }
 \examples{
-\dontrun{
+
 data(iris)
 X <- iris[,-5]
 Class <- iris$Species
 
 # Unscented Transformation approximation (default)
-pp1 <- ppgmmga(data = X, d = 2, approx = "UT")
+pp1 <- ppgmmga(data = X, d = 2, approx = "UT", seed = 123)
 summary(pp1, check = TRUE)
 plot(pp1, Class)
 
+\dontrun{
 # VARiational approximation
 pp2 <- ppgmmga(data = X, d = 2, approx = "VAR")
 summary(pp2, check = TRUE)
