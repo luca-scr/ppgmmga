@@ -266,7 +266,7 @@ double EntropyVAR(int G,
       left = left + (pro[k] * exp(-KLMN(mean(_,i),sigma.slice(i),mean(_,k),sigma.slice(k))));
     }
 
-    right = right + pro[i] * 0.5 * log(pow(2*M_PI*exp(1),d) * arma::det(sigma.slice(i)));
+    right = right + pro[i] * 0.5 * log(pow(2*M_PI*exp(1.0),d) * arma::det(sigma.slice(i)));
   	D = D + pro[i] * log(left);
   }
 

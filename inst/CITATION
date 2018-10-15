@@ -14,7 +14,7 @@ citEntry(entry = "Article",
   textVersion  =
   paste("Scrucca, L. and Serafini, A. (2018).",
         "Projection pursuit based on Gaussian mixtures and evolutionary algorithms",
-        "Under review"
+        "Submmitted to  review"
         # "URL http://www.jstatsoft.org/v53/i04/"
         )
 )
