@@ -7,6 +7,7 @@ output:
   rmarkdown::html_vignette:
     toc: true
     number_sections: false
+    # highlight: "monochrome"
     css: "vignette.css"
 vignette: >
   %\VignetteIndexEntry{A quick tour of ppgmmga}
@@ -18,7 +19,7 @@ vignette: >
 library(knitr)
 opts_chunk$set(fig.align = "center", 
                out.width = "90%",
-               fig.width = 6, fig.height = 5.5,
+               fig.width = 6, fig.height = 5,
                dev.args=list(pointsize=10),
                par = TRUE, # needed for setting hook 
                collapse = TRUE, # collapse input & ouput code in chunks
@@ -32,7 +33,7 @@ knit_hooks$set(par = function(before, options, envir)
 
 # Introduction 
 
-An R package implementing a Projection Pursuit algorithm based on finite Gaussian mixtures models for density estimation using Genetic Algorithms to maximise an approximated Negentropy index. The **ppgmmga** algorithm provides a method to visualise high-dimensional data in a lower-dimensional space.
+An R package implementing a Projection Pursuit algorithm based on finite Gaussian Mixtures Models for density estimation using Genetic Algorithms (PPGMMGA) to maximise an approximated Negentropy index. The **ppgmmga** algorithm provides a method to visualise high-dimensional data in a lower-dimensional space, with special reference to reveal clustering structures.
 
 ```{r, message = FALSE, echo=1}
 library(ppgmmga)
@@ -41,7 +42,7 @@ cat(ppgmmga:::ppgmmgaStartupMessage(), sep="")
 
 # Banknote data
 
-```{r}
+```{r, fig.width = 6, fig.height = 6}
 library(mclust)
 data("banknote")
 X <- banknote[,-1]
@@ -50,30 +51,44 @@ table(Class)
 clPairs(X, classification = Class)
 ```
 
-# ppgmmga
-
-## 1-dimensional ppgmmga
+# 1-dimensional ppgmmga
 
 ```{r}
 pp1D <- ppgmmga(data = X, d = 1, approx = "UT", seed = 1)
 pp1D
 summary(pp1D)
+```
+
+```{r, out.width="60%", fig.width=6, fig.height=4}
 plot(pp1D)
+```
+
+```{r, out.width="70%", fig.width=7, fig.height=4}
 plot(pp1D, class = Class)
 ```
 
-## 2-dimensional ppgmmga
+
+# 2-dimensional ppgmmga
 
 ```{r}
 pp2D <- ppgmmga(data = X, d = 2, approx = "UT", seed = 1)
 summary(pp2D, check = TRUE)
 summary(pp2D$GMM)
+```
+
+```{r}
 plot(pp2D$GA)
+```
+
+```{r}
 plot(pp2D)
+```
+
+```{r, fig.width = 7, fig.height = 5}
 plot(pp2D, class = Class, drawAxis = FALSE)
 ```
 
-## 3-dimensional ppgmmga
+# 3-dimensional ppgmmga
 
 ```{r}
 gmm <- densityMclust(data = scale(X, center = TRUE, scale = FALSE), G = 2)
@@ -83,14 +98,35 @@ pp3D <- ppgmmga(data = X, d = 3,
                 options = ppgmmga.options(numIslands = 2),
                 seed = 1)
 summary(pp3D$GA)
-plot(pp3D$GA)
-plot(pp3D)
-plot(pp3D, class = Class)
-plot(pp3D, dim = c(1,2))
-plot(pp3D, dim = c(1,3), class = Class)
 ```
 
+```{r}
+plot(pp3D$GA)
+```
+
+```{r, fig.width = 6, fig.height = 6}
+plot(pp3D)
+```
+
+```{r, fig.width = 6, fig.height = 6}
+plot(pp3D, class = Class)
+```
+
+```{r}
+plot(pp3D, dim = c(1,2))
+```
+
+```{r, fig.width = 7, fig.height = 5}
+plot(pp3D, dim = c(1,3), class = Class)
+```
+<br>
 
 # References
 
 Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. Under review.
+
+----
+
+```{r}
+devtools::session_info()
+```

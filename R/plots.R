@@ -73,8 +73,8 @@ plot.ppgmmga <- function(x, class = NULL,
     if(drawAxis)
     { 
       df2 <- data.frame(varnames = abbreviate(colnames(x$data), 5),
-                        x = x$basis[,1],
-                        y = x$basis[,2],
+                        x = x$basis[,dim[1]],
+                        y = x$basis[,dim[2]],
                         stringsAsFactors = FALSE)
       mult <- min((max(Zpp[,1]) - min(Zpp[,1])/(max(df2$x)-min(df2$x))),
                   (max(Zpp[,2]) - min(Zpp[,2])/(max(df2$y)-min(df2$y))) )
@@ -88,8 +88,8 @@ plot.ppgmmga <- function(x, class = NULL,
                      alpha = 0.5, color = "gray30") +
         geom_text(data = df2, aes_string(x = "x", y = "y", 
                                          label = "varnames"),
-                  nudge_x = 0.1*diff(range(df2$x))*sign(df2$x),
-                  nudge_y = 0.1*diff(range(df2$y))*sign(df2$y),
+                  nudge_x = 0.1*diff(range(df2$x))*sign(df2$x)[1],
+                  nudge_y = 0.1*diff(range(df2$y))*sign(df2$y)[1],
                   alpha = 0.5, color = "gray30")
     }
 
