@@ -17,3 +17,5 @@ src/*.dll
 *.knit.md
 
 **/.DS_Store
+
+/misc/
