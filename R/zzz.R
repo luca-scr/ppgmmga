@@ -1,12 +1,13 @@
-.onLoad <- function(libname, pkgname) 
-{
-  library.dynam("ppgmmga", pkgname, libname)
-}
-
-.onUnload <- function (lib)
-{
-  library.dynam.unload("ppgmmga", lib)
-}
+# TODO: remove?
+# .onLoad <- function(libname, pkgname) 
+# {
+#   library.dynam("ppgmmga", pkgname, libname)
+# }
+# 
+# .onUnload <- function (lib)
+# {
+#   library.dynam.unload("ppgmmga", lib)
+# }
 
 ppgmmgaStartupMessage <- function()
 {

@@ -1,6 +1,6 @@
 Package: ppgmmga
 Version: 1.0.2
-Date: 2018-12-22
+Date: 2019-01-07
 Title: Projection Pursuit Based on Gaussian Mixtures and Evolutionary Algorithms
 Description: Projection Pursuit (PP) algorithm for dimension reduction based on Gaussian Mixture Models (GMMs) for density estimation using Genetic Algorithms (GAs) to maximise an approximated negentropy index.
 Authors@R: c(person("Alessio", "Serafini", role = c("aut", "cre"),
@@ -10,17 +10,17 @@ Authors@R: c(person("Alessio", "Serafini", role = c("aut", "cre"),
                     comment = c(ORCID = "0000-0003-3826-0484"),
                     email = "luca.scrucca@unipg.it"))
 Depends: R (>= 3.4)
-Imports: Rcpp (>= 0.12.5), mclust (>= 5.0), GA (>= 3.1), 
+Imports: Rcpp (>= 1.0.0), mclust (>= 5.4), GA (>= 3.1), 
          ggplot2 (>= 2.2.1), ggthemes (>= 3.4.0), cli, crayon, utils, stats
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7)
 Suggests: knitr (>= 1.8)
+VignetteBuilder: knitr
 License: GPL (>= 2)
+Repository: CRAN
 URL: https://github.com/luca-scr/ppgmmga
 BugReports: https://github.com/luca-scr/ppgmmga/issues
-VignetteBuilder: knitr
-ByteCompile: true
-Repository: CRAN
 ByteCompile: true
 NeedsCompilation: yes
-LazyLoad: yes
+LazyData: yes
 Encoding: UTF-8
+RoxygenNote: 6.1.1

@@ -4,17 +4,18 @@ citEntry(entry = "Article",
   title        = "Projection pursuit based on Gaussian mixtures and evolutionary algorithms",
   author       = personList(person(given="Luca", family="Scrucca"),
                             person(given="Alessio", family="Serafini")),
-  journal      = "Under review",
-  year         = "2018",
+  note = "Accepted.",
+  journal      = "Journal of Computational and Graphical Statistics",
+  year         = "2019",
   # volume       = "53",
   # number       = "4",
   # pages        = "1--37",
   # url          = "http://www.jstatsoft.org/v53/i04/",
   #
   textVersion  =
-  paste("Scrucca, L. and Serafini, A. (2018).",
-        "Projection pursuit based on Gaussian mixtures and evolutionary algorithms",
-        "Submmitted to  review"
+  paste("Scrucca, L. and Serafini, A. (2019).",
+        "Projection pursuit based on Gaussian mixtures and evolutionary algorithms.",
+        "To apper in Journal of Computational and Graphical Statistics"
         # "URL http://www.jstatsoft.org/v53/i04/"
         )
 )

@@ -1,8 +1,9 @@
-# ppgmmga 1.0.2 (2018-12) NOT ON CRAN
+# ppgmmga 1.0.2 (2019-01) NOT ON CRAN
 
+- Added website via pkgdown.
 - Fix a warning in `plot.ppgmmga()` when d > 2 and `dim` is set to two 
   coordinates.
-- Update vignette.
+- Updated vignette.
   
 # ppgmmga 1.0.1 (2018-10)
 

@@ -18,4 +18,5 @@ src/*.dll
 
 **/.DS_Store
 
-/misc/
+misc/
+docs/

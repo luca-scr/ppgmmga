@@ -1,5 +1,4 @@
 useDynLib("ppgmmga", .registration = TRUE)
-
 #exportPattern("^[[:alpha:]]+")
 #importFrom("Rcpp", evalCpp)
 importFrom("Rcpp", sourceCpp)
@@ -22,7 +21,6 @@ S3method("print", "ppgmmga")
 S3method("summary", "ppgmmga")
 S3method("print", "summary.ppgmmga")
 S3method("plot", "ppgmmga")
-
 
 export(ppgmmga.options)
 

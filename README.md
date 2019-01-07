@@ -18,29 +18,20 @@ or the development version from GitHub:
 
 ```{r}
 # install.packages("devtools")
-devtools::install_github("luca-scr/ppgmmga")
+devtools::install_github("luca-scr/ppgmmga", build_vignettes = TRUE)
 ```
 
 ## Usage
 
-Usage of the main functions and several examples are included in the
-papers shown in the references section below.
+The methodology implemented in the package is describe in the paper referenced below.
 
-For an intro see the vignette **A quick tour of ppgmmga**, which is available
-as
+Usage of the main functions and some examples are included in the vignette **A quick tour of ppgmmga**, which is available as
 
 ```{r}
 vignette("ppgmmga")
 ```
 
-Note that if the package is installed from GitHub the vignette is not
-automatically created. However, it can be created when installing from
-GitHub with the code:
-
-```{r}
-devtools::install_github("luca-scr/ppgmmga", build_vignettes = TRUE)
-```
 
 ## References
 
-Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. *Under review*.
+Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. To appear in *Journal of Computational and Graphical Statistics*.

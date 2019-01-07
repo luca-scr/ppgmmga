@@ -128,5 +128,5 @@ Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixture
 ----
 
 ```{r}
-devtools::session_info()
+sessionInfo()
 ```
