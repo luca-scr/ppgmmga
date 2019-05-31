@@ -123,7 +123,9 @@ plot(pp3D, dim = c(1,3), class = Class)
 
 # References
 
-Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. Under review.
+```{r, echo=FALSE, results='asis'}
+print(citation("ppgmmga"), style = "text")
+```
 
 ----
 

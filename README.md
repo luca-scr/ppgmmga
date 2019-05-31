@@ -18,7 +18,7 @@ or the development version from GitHub:
 
 ```{r}
 # install.packages("devtools")
-devtools::install_github("luca-scr/ppgmmga", build_vignettes = TRUE)
+devtools::install_github("luca-scr/ppgmmga", build = TRUE, build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 ## Usage
@@ -34,4 +34,6 @@ vignette("ppgmmga")
 
 ## References
 
-Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. To appear in *Journal of Computational and Graphical Statistics*.
+Scrucca, L. and Serafini, A. (2019). Projection pursuit based on Gaussian mixtures and evolutionary algorithms. *Journal of Computational and Graphical Statistics* 
+DOI: 10.1080/10618600.2019.1598871 
+URL https://doi.org/10.1080/10618600.2019.1598871

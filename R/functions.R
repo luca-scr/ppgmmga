@@ -72,7 +72,6 @@ NegentropyMC <- function(par,
                           Z = GMM$data,
                           G = GMM$G,
                           d = d)
-
   # Negentropy
   EMC <- EntropyMC(G = GMM$G,
                    pro = GMM$parameters$pro,
@@ -90,3 +89,23 @@ NegentropyMC <- function(par,
   return(output)
 }
 
+NegentropyMCcheck <- function(object, nsamples = 1e5, conf.level = NULL)
+{
+  if(!inherits(object, "ppgmmga"))
+    stop("'object' must be of class 'ppgmmga'")
+  
+  MC <- NegentropyMC(par = object$GA@solution[1,],
+                     GMM = object$GMM,
+                     p = object$GMM$d,
+                     d = object$d,
+                     nsamples = nsamples,
+                     level = 1-conf.level)
+
+  out <- list("approx"            = object$approx,
+              "Approx Negentropy" = object$Negentropy,
+              "MC Negentropy"     = MC$Negentropy, 
+              "MC se"             = MC$se,
+              "MC interval"       = MC$confint,
+              "Relative accuracy" = object$Negentropy/MC$Negentropy)
+  return(out)
+}

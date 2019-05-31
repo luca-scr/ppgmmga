@@ -291,23 +291,3 @@ print.summary.ppgmmga <- function(x, digits = getOption("digits"), ...)
   print(x, na.print = "", ...)
 }
 
-NegentropyMCcheck <- function(object, nsamples = 1e5, conf.level = NULL)
-{
-  if(!inherits(object, "ppgmmga"))
-    stop("'object' must be of class 'ppgmmga'")
-  
-  MC <- NegentropyMC(par = object$GA@solution,
-                     GMM = object$GMM,
-                     p = object$GMM$d,
-                     d = object$d,
-                     nsamples = nsamples,
-                     level = 1-conf.level)
-
-  out <- list("approx"            = object$approx,
-              "Approx Negentropy" = object$Negentropy,
-              "MC Negentropy"     = MC$Negentropy, 
-              "MC se"             = MC$se,
-              "MC interval"       = MC$confint,
-              "Relative accuracy" = object$Negentropy/MC$Negentropy)
-  return(out)
-}

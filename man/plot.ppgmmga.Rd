@@ -72,6 +72,3 @@ plot(pp3, Class, dim = c(1,3))
 plot(pp3, Class, dim = c(2,3))
 }
 }
-
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }

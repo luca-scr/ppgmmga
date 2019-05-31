@@ -72,7 +72,8 @@ plot.ppgmmga <- function(x, class = NULL,
 
     if(drawAxis)
     { 
-      df2 <- data.frame(varnames = abbreviate(colnames(x$data), 5),
+      df2 <- data.frame(varnames = abbreviate(colnames(x$data), 
+			                                        minlength = 8),
                         x = x$basis[,dim[1]],
                         y = x$basis[,dim[2]],
                         stringsAsFactors = FALSE)
