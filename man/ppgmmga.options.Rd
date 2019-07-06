@@ -81,7 +81,7 @@ Scrucca, L. (2013) GA: A Package for Genetic Algorithms in R. \emph{Journal of S
 
 Scrucca, L. (2017) On some extensions to GA package: hybrid optimisation, parallelisation and islands evolution. \emph{The R Journal}, 9/1, 187-206. https://journal.r-project.org/archive/2017/RJ-2017-008
 
-Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. \emph{Under review}.
+Scrucca, L. and Serafini, A. (2019) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. *Journal of Computational and Graphical Statistics*, DOI: 10.1080/10618600.2019.1598871 
 }
 
 \seealso{\code{\link{ppgmmga}}}

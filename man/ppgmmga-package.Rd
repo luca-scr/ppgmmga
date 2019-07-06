@@ -20,5 +20,5 @@ Scrucca L. \email{luca.scrucca@unipg.it}
 \seealso{\code{\link{ppgmmga}}, \code{\link{plot.ppgmmga}}, \code{\link{ppgmmga-class}}, \code{\link{ppgmmga.options}}, \code{\link{summary.ppgmmga}}}
 
 \references{
-Scrucca, L. and Serafini, A. (2018) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. \emph{Under review}.
+Scrucca, L. and Serafini, A. (2019) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. *Journal of Computational and Graphical Statistics*, DOI: 10.1080/10618600.2019.1598871 
 }
