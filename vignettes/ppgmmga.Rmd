@@ -30,8 +30,6 @@ knit_hooks$set(par = function(before, options, envir)
   { if(before && options$fig.show != "none") 
        par(family = "sans", mar=c(4.1,4.1,1.1,1.1), mgp=c(3,1,0), tcl=-0.5)
 })
-
-library(rgl)
 ```
 
 # Introduction 
@@ -123,11 +121,12 @@ plot(pp3D, dim = c(1,2))
 plot(pp3D, dim = c(1,3), class = Class)
 ```
 
-```{r, echo=1}
+```{r, eval=FALSE}
+# A rotating 3D plot can be obtained using
+if(!require("msir")) install.packages("msir")
 msir::spinplot(pp3D$Z, markby = Class, 
                pch.points = c(19,17),
                col.points = Class_color)
-rglwidget(width=600, height=600)
 ```
 
 <br><br>

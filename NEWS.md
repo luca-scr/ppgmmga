@@ -1,7 +1,7 @@
 # ppgmmga 1.2 (2019-07)
 
 - Updated references to JCGS paper.
-- Added import of spinplot() from 'msir' package.
+- Added examples in ppgmmaga.Rd and vignette of possible usage of spinplot() from 'msir' package.
 - Updated vignette.
 
 # ppgmmga 1.1 (2019-01)

@@ -110,7 +110,7 @@ plot.ppgmmga <- function(x, class = NULL,
       col <- tableau_color_pal("Classic 10")(nlevels(class)) 
     }
     clPairs(data = Zpp, classification = class,
-            CEX = 1, colors = col, ...)
+            colors = col, ...)
   }
   )
 }
