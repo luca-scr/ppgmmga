@@ -52,7 +52,8 @@ Class <- banknote$Status
 table(Class)
 Class_color <- ggthemes::tableau_color_pal("Classic 10")(2)
 clPairs(X, classification = Class, 
-        symbols = c(20,3), colors = Class_color)
+        symbols = ppgmmga.options("classPlotSymbols"),
+        colors = ppgmmga.options("classPlotColors"))
 ```
 
 # 1-dimensional PPGMMGA

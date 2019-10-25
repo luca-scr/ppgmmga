@@ -39,8 +39,10 @@ plot.ppgmmga <- function(x, class = NULL,
                        alpha = 0.6,
                        bins = if(is.function(bins)) bins(Zpp[,1])
                               else as.numeric(bins)) +
-        scale_fill_tableau("Classic 10") +
-        scale_color_tableau("Classic 10") +
+        scale_fill_manual(values = rep(ppgmmga.options("classPlotColors"),
+                                       length = nlevels(class))) + 
+        scale_colour_manual(values = rep(ppgmmga.options("classPlotColors"), 
+                                         length = nlevels(class))) + 
         labs(fill = class.name, col = class.name)
     } else
     {
@@ -63,7 +65,11 @@ plot.ppgmmga <- function(x, class = NULL,
     {
       gg <- gg +
         geom_point(cex = 1, aes_string(shape = "class", colour = "class")) +
-        scale_colour_tableau("Classic 10") +
+        scale_shape_manual(values = rep(ppgmmga.options("classPlotSymbols"),
+                                        length = nlevels(class))) + 
+        # scale_colour_tableau("Classic 10") +
+        scale_colour_manual(values = rep(ppgmmga.options("classPlotColors"), 
+                                         length = nlevels(class))) + 
         labs(shape = class.name, colour = class.name)
     } else 
     {
@@ -94,9 +100,6 @@ plot.ppgmmga <- function(x, class = NULL,
                   alpha = 0.5, color = "gray30")
     }
 
-    if(nlevels(class) > 6)
-    { gg <- gg + scale_shape_manual(values=1:nlevels(class)) }
-           
     gg <- gg + theme_bw()
     return(gg)
   },
@@ -104,13 +107,15 @@ plot.ppgmmga <- function(x, class = NULL,
     if(is.null(class.name))
     { 
       class <- rep(1,nrow(Zpp))
-      col <- "black"
+      symb <- 20
+      col  <- "black"
     } else
     { 
-      col <- tableau_color_pal("Classic 10")(nlevels(class)) 
+      symb <- rep(ppgmmga.options("classPlotSymbols"), length = nlevels(class))
+      col  <- rep(ppgmmga.options("classPlotColors"), length = nlevels(class))
     }
     clPairs(data = Zpp, classification = class,
-            colors = col, ...)
+            symbols = symb, colors = col, ...)
   }
   )
 }

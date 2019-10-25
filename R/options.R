@@ -25,7 +25,9 @@
   optimMethod = "L-BFGS-B",
   optimMaxit = 100,
   # ppgmmga
-  orthDecomp = "QR"
+  orthDecomp = "QR",
+  classPlotSymbols = c(16, 0, 17, 3, 15, 4, 1, 8, 2, 7, 5, 9, 6, 10, 11, 18, 12, 13, 14),
+  classPlotColors = tableau_color_pal(palette = "Classic 10")(10)
 )
 
 ppgmmga.options <- function(...)
