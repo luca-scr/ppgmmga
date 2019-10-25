@@ -15,7 +15,7 @@ importFrom("crayon", "bold")
 export(ppgmmga, print.ppgmmga, summary.ppgmmga,
        print.summary.ppgmmga, plot.ppgmmga)
 
-export(EntropyUT, EntropyVAR, EntropySOTE, EntropyMC, EntropyGauss)
+export(EntropyGMM, EntropyUT, EntropyVAR, EntropySOTE, EntropyMC, EntropyGauss, logsumexp)
 
 S3method("print", "ppgmmga")
 S3method("summary", "ppgmmga")

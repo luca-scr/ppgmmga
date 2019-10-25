@@ -34,7 +34,8 @@ knit_hooks$set(par = function(before, options, envir)
 
 # Introduction 
 
-An R package implementing a Projection Pursuit algorithm based on finite Gaussian Mixtures Models for density estimation using Genetic Algorithms (PPGMMGA) to maximise an approximated Negentropy index. The **ppgmmga** algorithm provides a method to visualise high-dimensional data in a lower-dimensional space, with special reference to reveal clustering structures.
+An R package implementing a Projection Pursuit algorithm based on finite Gaussian Mixtures Models for density estimation using Genetic Algorithms (PPGMMGA) to maximise a Negentropy index. 
+The **PPGMMGA** algorithm provides a method to visualise high-dimensional data in a lower-dimensional space, with special reference to reveal clustering structures.
 
 ```{r, message = FALSE, echo=1}
 library(ppgmmga)
@@ -50,82 +51,83 @@ X <- banknote[,-1]
 Class <- banknote$Status
 table(Class)
 Class_color <- ggthemes::tableau_color_pal("Classic 10")(2)
-clPairs(X, classification = Class, colors = Class_color)
+clPairs(X, classification = Class, 
+        symbols = c(20,3), colors = Class_color)
 ```
 
-# 1-dimensional ppgmmga
+# 1-dimensional PPGMMGA
 
 ```{r}
-pp1D <- ppgmmga(data = X, d = 1, approx = "UT", seed = 1)
-pp1D
-summary(pp1D)
+PP1D <- ppgmmga(data = X, d = 1, seed = 1)
+PP1D
+summary(PP1D)
 ```
 
 ```{r, out.width="60%", fig.width=6, fig.height=4}
-plot(pp1D)
+plot(PP1D)
 ```
 
 ```{r, out.width="70%", fig.width=7, fig.height=4}
-plot(pp1D, class = Class)
+plot(PP1D, class = Class)
 ```
 
 
-# 2-dimensional ppgmmga
+# 2-dimensional PPGMMGA
 
 ```{r}
-pp2D <- ppgmmga(data = X, d = 2, approx = "UT", seed = 1)
-summary(pp2D, check = TRUE)
-summary(pp2D$GMM)
+PP2D <- ppgmmga(data = X, d = 2, seed = 1)
+summary(PP2D)
+summary(PP2D$GMM)
 ```
 
 ```{r}
-plot(pp2D$GA)
+plot(PP2D$GA)
 ```
 
 ```{r}
-plot(pp2D)
+plot(PP2D)
 ```
 
 ```{r, fig.width = 7, fig.height = 5}
-plot(pp2D, class = Class, drawAxis = FALSE)
+plot(PP2D, class = Class, drawAxis = FALSE)
 ```
 
-# 3-dimensional ppgmmga
+# 3-dimensional PPGMMGA
 
 ```{r}
-pp3D <- ppgmmga(data = X, d = 3, 
+PP3D <- ppgmmga(data = X, d = 3, 
                 center = TRUE, scale = FALSE, 
                 gatype = "gaisl", 
                 options = ppgmmga.options(numIslands = 2),
                 seed = 1)
-summary(pp3D, check = TRUE)
+summary(PP3D)
 ```
 
 ```{r}
-plot(pp3D$GA)
+plot(PP3D$GA)
 ```
 
 ```{r, fig.width = 7, fig.height = 6, out.width = "100%"}
-plot(pp3D)
+plot(PP3D)
 ```
 
 ```{r, fig.width = 7, fig.height = 6, out.width = "100%"}
-plot(pp3D, class = Class)
+plot(PP3D, class = Class)
 ```
 
 ```{r, fig.width = 6, fig.height = 5}
-plot(pp3D, dim = c(1,2))
+plot(PP3D, dim = c(1,2))
 ```
 
 ```{r, fig.width = 7, fig.height = 5, out.width = "90%"}
-plot(pp3D, dim = c(1,3), class = Class)
+plot(PP3D, dim = c(1,3), class = Class)
 ```
 
 ```{r, eval=FALSE}
 # A rotating 3D plot can be obtained using
 if(!require("msir")) install.packages("msir")
-msir::spinplot(pp3D$Z, markby = Class, 
-               pch.points = c(19,17),
+msir::spinplot(PP3D$Z, markby = Class, 
+               pch.points = c(20,17),
                col.points = Class_color)
 ```
 

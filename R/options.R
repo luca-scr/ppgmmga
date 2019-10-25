@@ -25,7 +25,7 @@
   optimMethod = "L-BFGS-B",
   optimMaxit = 100,
   # ppgmmga
-  orth = "QR"
+  orthDecomp = "QR"
 )
 
 ppgmmga.options <- function(...)

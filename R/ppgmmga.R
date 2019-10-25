@@ -1,9 +1,9 @@
 ppgmmga <- function(data,
                     d,
-                    approx = c("UT","VAR","SOTE"),
+                    approx = c("none", "UT","VAR","SOTE"),
                     center = TRUE,
                     scale = TRUE,
-                    gmm = NULL,
+                    GMM = NULL,
                     gatype = c("ga", "gaisl"),
                     options = ppgmmga.options(),
                     seed = NULL,
@@ -23,8 +23,10 @@ ppgmmga <- function(data,
 
   if(!is.function(approx))
   { 
-    approx <- match.arg(approx, choices = eval(formals(ppgmmga)$approx))
+    approx <- match.arg(approx, several.ok = FALSE,
+                        choices = eval(formals(ppgmmga)$approx))
     approxFun <- switch(approx,
+                        "none" = NegentropyGMM,
                         "UT"   = NegentropyUT,
                         "SOTE" = NegentropySOTE,
                         "VAR"  = NegentropyVAR)
@@ -45,9 +47,9 @@ ppgmmga <- function(data,
   dimnames(Z) <- dimnames(data)
 
   ## GMM density estimation
-  if(is.null(gmm))
+  if(is.null(GMM))
   { 
-    gmm <- densityMclust(data = Z,
+    GMM <- densityMclust(data = Z,
                          modelNames = options$modelNames,
                          G = options$G,
                          initialization = list(hcPairs = hc(Z, use = options$initMclust)),
@@ -55,9 +57,9 @@ ppgmmga <- function(data,
                          ...)
   } else
   { 
-    if(!inherits(gmm, "densityMclust"))
-      stop("If provided, argument 'gmm' must be an object of class 'densityMclust'.")
-    if(any((gmm$data - Z) > sqrt(.Machine$double.eps)))
+    if(!inherits(GMM, "densityMclust"))
+      stop("If provided, argument 'GMM' must be an object of class 'densityMclust'.")
+    if(any((GMM$data - Z) > sqrt(.Machine$double.eps)))
       stop("Input data appears to be different from data used for density estimation!")
   }
 
@@ -65,10 +67,10 @@ ppgmmga <- function(data,
   GA <- switch(gatype,
                "ga" = ga(type = "real-valued",
                          fitness = approxFun,
-                         gmm = gmm,
+                         GMM = GMM,
                          p = p,
                          d = d,
-                         decomposition = options$orth,
+                         decomp = options$orthDecomp,
                          lower = rep(rep(0, p-1), d),
                          upper = rep(c(2*pi, rep(pi,p-2)), d),
                          popSize = options$popSize,
@@ -89,14 +91,13 @@ ppgmmga <- function(data,
                          pmutation = options$pmutation,
                          parallel = options$parallel,
                          seed = seed, 
-                         monitor = verbose,
-                         ...),
+                         monitor = verbose),
                "gaisl" = gaisl(type = "real-valued",
                                fitness = approxFun,
-                               gmm = gmm,
+                               GMM = GMM,
                                p = p,
                                d = d,
-                               decomposition = options$orth,
+                               decomp = options$orthDecomp,
                                lower = rep(rep(0, p-1), d),
                                upper = rep(c(2*pi, rep(pi,p-2)), d),
                                popSize = options$popSize,
@@ -120,15 +121,14 @@ ppgmmga <- function(data,
                                migrationInterval = options$migrationInterval,
                                parallel = options$parallel,
                                seed = seed,
-                               monitor = verbose,
-                               ...)
+                               monitor = verbose)
                # "de" = de(type = "real-valued",
                #           fitness = function(...) 
                #             approxFun(...,
-               #                       gmm = gmm,
+               #                       GMM = GMM,
                #                       p = p,
                #                       d = d,
-               #                       decomposition = options$orth),
+               #                       decomp = options$orthDecomp),
                #           popSize = options$popSize,
                #           maxiter = options$maxiter,
                #           run = options$run,
@@ -150,7 +150,7 @@ ppgmmga <- function(data,
   )
 
   B <- encodeBasis(GA@solution[1,], p = p, d = d,
-                   decomposition = options$orth)
+                   decomp = options$orthDecomp)
   colnames(B) <- paste0("PP", seq(d))
   rownames(B) <- colnames(data)
 
@@ -158,7 +158,7 @@ ppgmmga <- function(data,
               data = Z,
               d = d,
               approx = approx,
-              GMM = gmm,
+              GMM = GMM,
               GA = GA,
               Negentropy = GA@fitnessValue,
               basis = B,
@@ -181,7 +181,7 @@ print.ppgmmga <- function(x, ...)
   invisible()
 }
 
-summary.ppgmmga <- function(object, check = FALSE, ...)
+summary.ppgmmga <- function(object, check = (object$approx != "none"), ...)
 {
   out <- list(approx = object$approx,
               Negentropy = object$Negentropy,
@@ -228,8 +228,11 @@ print.summary.ppgmmga <- function(x, digits = getOption("digits"), ...)
             x$d, "\n"))
   cat(paste0("GMM density estimate          = (", 
              x$modelName,",", x$G,")", "\n"))
-  cat(paste("Negentropy approximation      =",
-            x$approx, "\n"))
+  if(x$approx != "none")
+  {
+    cat(paste("Negentropy approximation      =",
+              x$approx, "\n"))
+  }
   cat(paste("GA optimal negentropy         =",
             signif(x$Negentropy, digits), "\n"))
 

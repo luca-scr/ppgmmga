@@ -1,14 +1,149 @@
 #include <RcppArmadillo.h>
+#include <algorithm>
 
 using namespace Rcpp;
-
 //[[Rcpp::depends(RcppArmadillo)]]
 
-//////////////////////////////////////////////////
-//            PRELIMINARY FUNCTIONS             //
-//              internal functions              //
-/////////////////////////////////////////////////
+// [[Rcpp::export]]
+List LinTransf(arma::mat mean,
+               arma::cube sigma,
+               arma::mat B,
+               arma::mat Z,
+               int G,
+               int d)
+{
 
+  arma::mat Bt = B.t();
+  arma::mat m = Bt*mean;
+  arma::mat sz = Bt*cov(Z)*B;
+  arma::cube s(d,d,G); s.zeros();
+
+  //arma::uword Brow =  B.n_rows;
+  //arma::uword Bcol = B.n_cols;
+
+  // if(Brow != d & Bcol != d)
+  // {
+  //
+  //   B.save("B.csv", arma::csv_ascii);
+  // }
+
+  for(int i=0;i<G;i++)
+  {
+    s.slice(i) = Bt*sigma.slice(i)*B;
+  }
+
+  return List::create(Rcpp::Named("mean") = m,
+                      Rcpp::Named("sigma") = s,
+                      Rcpp::Named("sz") = sz);
+}
+
+
+// [[Rcpp::export]]
+double EntropyGauss(arma::mat S, int d)
+{
+  return 0.5 * (d * (log(2 * arma::datum::pi) + 1) + log(arma::det(S)));
+}
+
+
+// [[Rcpp::export]]
+arma::mat orth(arma::mat A, std::string method = "QR")
+{
+  double    eps = std::numeric_limits<double>::epsilon();
+  arma::mat B;
+
+  if(method == "SVD")
+  {
+    arma::mat U;
+    arma::vec d;
+    arma::mat V;
+    double tol = 0;
+    int    r = 0;
+    arma::uword m = A.n_rows;
+    arma::uword n = A.n_cols;
+    arma::vec s(m); s.zeros();
+    arma::svd_econ(U,d,V,A, "both", "dc");
+
+    if(m >= 1)  s = d;
+
+    double m1 = std::max(m,n);
+    double m2 = arma::max(s);
+
+    tol = m1 * m2 * eps;
+    r = sum(s > tol) - 1;
+
+    //Rcout << U.col(0) << "\n";
+    //arma::mat out = U(arma::span(0,(m-1)), arma::span(0,r));
+    //return U;
+    //return out;
+    
+    B = U(arma::span(0,(m-1)), arma::span(0,r));
+
+  } else if(method == "QR")
+  {
+    arma::mat Q, R;
+    arma::qr_econ(Q,R,A);
+    B = Q;
+  }
+
+  return B;
+}
+
+// [[Rcpp::export]]
+NumericVector encode(NumericVector par, int p) 
+{
+  int n = p-1;
+  NumericVector w(p, 1.0);
+
+  if(p==2)
+  {
+    w(0) = sin(par(0));
+    w(1) = cos(par(0));
+  }
+  else if(p==3)
+  {
+    w(0) = sin(par(1))*sin(par(0));
+    w(1) = sin(par(1))*cos(par(0));
+    w(2) = cos(par(1));
+  } else 
+  {
+    int count = n-1;
+    w(n) = cos(par(1));
+    for(int i=1; i<n; i++)
+    {
+      w(0) *= sin(par(i));
+      w(1) *= sin(par(i));
+    }
+    w(0) = w(0)*sin(par(0));
+    w(1) = w(1)*cos(par(0));
+
+    for(int i=2; i<p-1; i++)
+    {
+      for(int j=1; j <= n-i; j++)
+      {
+        w(i) *= sin(par(j));
+      }
+      w(i) = w(i)*cos(par(count));
+      count--;
+    }
+  }
+
+  return w;
+}
+
+// [[Rcpp::export]]
+NumericMatrix encodebasis(NumericVector par, int d, int p)
+{
+  // Reference: Baragona, Battaglia, Poli (2011, p. 78)
+  //par.attr("dim") = Dimension(d, p);
+  NumericMatrix parMat(p-1, d, par.begin());
+  NumericMatrix basis(p, d);
+  for(int i=0;i<d;i++)
+  {
+    basis(_,i) = encode(parMat(_,i), p);
+  }
+
+  return basis;
+}
 
 //////////////////////////////////////////////////////////////////////////
 //       KULBACK-LEIBNER DIVERGENCE FOR TWO GAUSSIAN DISTRIBUTIONS      //
@@ -22,8 +157,8 @@ using namespace Rcpp;
 //////////////////////////////////////////////////////////////////////////
 
 
-double KLMN(arma::vec mean1, arma::mat sigma1, arma::vec mean2, arma::mat sigma2){
-
+double KLMN(arma::vec mean1, arma::mat sigma1, arma::vec mean2, arma::mat sigma2)
+{
   int d=sigma1.n_rows;
   arma::mat div; div.zeros();
 
@@ -43,17 +178,16 @@ double KLMN(arma::vec mean1, arma::mat sigma1, arma::vec mean2, arma::mat sigma2
 //  logd = logical value; if true density is returned in log scale      //
 //////////////////////////////////////////////////////////////////////////
 
-const double log2pi = std::log(2.0 * M_PI);
 double dmvnrm(arma::rowvec x,
               arma::rowvec mean,
               arma::mat sigma,
               bool logd = false) 
 {
-  int    xdim = sigma.n_cols;
-  
+  int       xdim = sigma.n_cols;
+  double    log2pi = std::log(2.0 * M_PI);
   arma::mat rooti = arma::trans(arma::inv(trimatu(arma::chol(sigma))));
-  double rootisum = arma::sum(log(rooti.diag()));
-  double constants = -(static_cast<double>(xdim)/2.0) * log2pi;
+  double    rootisum = arma::sum(log(rooti.diag()));
+  double    constants = -(static_cast<double>(xdim)/2.0) * log2pi;
 
   arma::vec z = rooti * arma::trans( x - mean) ;
   double    out = constants - 0.5 * arma::sum(z%z) + rootisum;
@@ -70,6 +204,7 @@ double dmvnrm(arma::rowvec x,
 //       Logsumexp                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+// [[Rcpp::export]]
 double logsumexp(arma::vec x) 
 {
   double max = x.max();
@@ -333,4 +468,68 @@ List EntropyMCapprox(arma::mat data,
   return List::create(Rcpp::Named("Entropy") = ent,
                       Rcpp::Named("se") = se);
 }
+
+
+//  Entropy of a GMM
+//
+//  data = data (n x d)
+//  G = number of GMM components 
+//  pro = mixing proportions (G)
+//  mean = component means (d x G)
+//  sigma = component covariance matrices (d x d x G)
+//  logarithm = false/true
+
+// [[Rcpp::export]]
+double EntropyGMM(arma::mat data,
+                  arma::vec pro,
+                  arma::mat mean,
+                  arma::cube sigma)
+{
+  double     entropy = 0.0;
+  int        n = data.n_rows;
+  int        G = pro.n_elem;
+  arma::vec  logpro = log(pro);
+             mean = mean.t();
+  arma::mat  logcdens = arma::mat(n,G).zeros();
+  arma::vec  d = arma::vec(G);
+  arma::vec  logdens = arma::vec(n).zeros();
+  arma::vec  zz = arma::vec(G).zeros();
+  arma::mat  z = arma::mat(n,G).zeros();
+  
+  for(int i=0; i<n; i++)
+  {
+    d.zeros();
+    for(int g=0; g<G; g++)
+    {
+      // log component-density
+      logcdens(i,g) = dmvnrm(data.row(i), mean.row(g), sigma.slice(g), true);
+      // log density
+      d(g) = log(pro(g)) + logcdens(i,g);
+    }
+    logdens(i) = logsumexp(d);
+  }
+
+  // conditional probs
+  for(int i=0; i<n; i++)
+  {
+     zz = logcdens.row(i).t() + logpro;
+     zz = exp(zz - logsumexp(zz));
+     z.row(i) = zz.t();
+  }
+  
+  for(int i=0; i<n; i++)
+  {
+    for(int k=0; k<G; k++)
+    {
+       entropy += z(i,k) * logdens(i);
+    }
+  }
+  entropy = -entropy/n;
+  
+  return(entropy);
+}
+
+
+
+
 
