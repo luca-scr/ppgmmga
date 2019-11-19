@@ -12,7 +12,7 @@ ppgmmga <- function(data,
 {
 
   call <- match.call()
-
+  args <- list(...)
   center <- as.logical(center)
   scale  <- as.logical(scale)
   if(!center & !scale)
@@ -47,6 +47,7 @@ ppgmmga <- function(data,
   dimnames(Z) <- dimnames(data)
 
   ## GMM density estimation
+  if(!is.null(args$gmm)) GMM <- args$gmm
   if(is.null(GMM))
   { 
     GMM <- densityMclust(data = Z,
@@ -262,7 +263,8 @@ print.summary.ppgmmga <- function(x, digits = getOption("digits"), ...)
 # print a short version of a matrix by allowing to select the number of 
 # head/tail rows and columns to display
 
-.printShortMatrix <- function(x, head = 2, tail = 1, chead = 5, ctail = 1, ...)
+.printShortMatrix <- function(x, head = 2, tail = 1, chead = 5, ctail = 1, 
+                              digits = getOption("digits"), ...)
 { 
   x <- as.matrix(x)
   nr <- nrow(x)
@@ -291,6 +293,6 @@ print.summary.ppgmmga <- function(x, digits = getOption("digits"), ...)
       colnames(x) <- c(cnames[1:chead], " ... ", cnames[(nc-ctail+1):nc])
   }
           
-  print(x, na.print = "", ...)
+  print(zapsmall(x, digits = digits), na.print = "", ...)
 }
 

@@ -18,15 +18,6 @@ List LinTransf(arma::mat mean,
   arma::mat sz = Bt*cov(Z)*B;
   arma::cube s(d,d,G); s.zeros();
 
-  //arma::uword Brow =  B.n_rows;
-  //arma::uword Bcol = B.n_cols;
-
-  // if(Brow != d & Bcol != d)
-  // {
-  //
-  //   B.save("B.csv", arma::csv_ascii);
-  // }
-
   for(int i=0;i<G;i++)
   {
     s.slice(i) = Bt*sigma.slice(i)*B;

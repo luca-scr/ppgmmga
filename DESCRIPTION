@@ -11,7 +11,7 @@ Authors@R: c(person("Alessio", "Serafini", role = c("aut", "cre"),
                     email = "luca.scrucca@unipg.it"))
 Depends: R (>= 3.4)
 Imports: Rcpp (>= 1.0.0), mclust (>= 5.4), GA (>= 3.1), 
-         ggplot2 (>= 2.2.1), ggthemes (>= 3.4.0), 
+         ggplot2 (>= 2.2.1), ggthemes (>= 3.4.0),
          cli, crayon, utils, stats
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7)
 Suggests: knitr (>= 1.8)

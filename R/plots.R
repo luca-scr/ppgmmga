@@ -95,11 +95,11 @@ plot.ppgmmga <- function(x, class = NULL,
                      alpha = 0.5, color = "gray30") +
         geom_text(data = df2, aes_string(x = "x", y = "y", 
                                          label = "varnames"),
-                  nudge_x = 0.1*diff(range(df2$x))*sign(df2$x)[1],
-                  nudge_y = 0.1*diff(range(df2$y))*sign(df2$y)[1],
+                  nudge_x = 0.05*diff(range(df2$x))*sign(df2$x),
+                  nudge_y = 0.05*diff(range(df2$y))*sign(df2$y),
                   alpha = 0.5, color = "gray30")
     }
-
+    
     gg <- gg + theme_bw()
     return(gg)
   },
