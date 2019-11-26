@@ -1,6 +1,6 @@
 ppgmmga <- function(data,
                     d,
-                    approx = c("none", "UT","VAR","SOTE"),
+                    approx = c("UT","VAR","SOTE","none"),
                     center = TRUE,
                     scale = TRUE,
                     GMM = NULL,

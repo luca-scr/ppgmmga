@@ -468,7 +468,6 @@ List EntropyMCapprox(arma::mat data,
 //  pro = mixing proportions (G)
 //  mean = component means (d x G)
 //  sigma = component covariance matrices (d x d x G)
-//  logarithm = false/true
 
 // [[Rcpp::export]]
 double EntropyGMM(arma::mat data,

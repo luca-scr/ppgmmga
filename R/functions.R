@@ -20,11 +20,13 @@ encodeBasis <- function(par, p, d, orth = TRUE, decomp = c("QR","SVD"))
 
 # For the Rcpp version see EntropyGMM()
 # this is the companion R version (which is less efficient)
-EntropyGMM_R <- function(data, pro, mean, sigma, ...)
+EntropyGMM_R <- function(data, pro, mean, sigma, wts = NULL, ...)
 {
   data <- as.matrix(data)
   n <- nrow(data)
   d <- ncol(data)
+  if(is.null(wts)) wts <- rep(1, n)
+  wts <- wts/sum(wts)
   pro <- as.vector(pro)
   G <- length(pro)
   mean <- array(mean, dim = c(d, G))
@@ -58,7 +60,7 @@ EntropyGMM_R <- function(data, pro, mean, sigma, ...)
   cden <- sweep(cden, 1, FUN = "-", STATS = maxlog)
   logdens <- log(apply(exp(cden), 1, sum)) + maxlog
   # entropy
-  h <- -sum(sweep(z, MARGIN = 1,  FUN = "*", STATS = logdens))/n
+  h <- -sum(rowSums(sweep(z, MARGIN = 1,  FUN = "*", STATS = logdens))*wts)
     
   return(h)
 }
