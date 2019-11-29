@@ -24,6 +24,8 @@
 # To reproduce the results of the paper please use:
 # - R ver. 3.5.3 (2019-03-11) 
 # - ppgmmga ver. 1.2 (2019-07-08)
+# In R ver. >= 3.6 the following command is needed for backward compatibility:
+RNGkind(sample.kind = "Rounding")
 
 # To compile the full report with results use:
 # rmarkdown::render("code.R")
@@ -286,3 +288,7 @@ plot(PPGMMGA, Class, drawAxis = FALSE) +
 
 plots <- grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 
+# ----
+
+# Restore default sample's behavior:
+RNGkind(sample.kind = "default")
