@@ -13,10 +13,6 @@ orth <- function(A, method = "QR") {
     .Call(`_ppgmmga_orth`, A, method)
 }
 
-encode <- function(par, p) {
-    .Call(`_ppgmmga_encode`, par, p)
-}
-
 encodebasis <- function(par, d, p) {
     .Call(`_ppgmmga_encodebasis`, par, d, p)
 }

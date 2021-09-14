@@ -46,18 +46,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// encode
-NumericVector encode(NumericVector par, int p);
-RcppExport SEXP _ppgmmga_encode(SEXP parSEXP, SEXP pSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type par(parSEXP);
-    Rcpp::traits::input_parameter< int >::type p(pSEXP);
-    rcpp_result_gen = Rcpp::wrap(encode(par, p));
-    return rcpp_result_gen;
-END_RCPP
-}
 // encodebasis
 NumericMatrix encodebasis(NumericVector par, int d, int p);
 RcppExport SEXP _ppgmmga_encodebasis(SEXP parSEXP, SEXP dSEXP, SEXP pSEXP) {

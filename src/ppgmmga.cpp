@@ -79,7 +79,6 @@ arma::mat orth(arma::mat A, std::string method = "QR")
   return B;
 }
 
-// [[Rcpp::export]]
 NumericVector encode(NumericVector par, int p) 
 {
   int n = p-1;
@@ -321,6 +320,7 @@ arma::mat F(arma::vec data,
 //  sigma = covariance matrix                                           //
 //  d = dimension of the data                                           //
 //////////////////////////////////////////////////////////////////////////
+
 
 //[[Rcpp::export]]
 

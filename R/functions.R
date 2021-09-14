@@ -47,6 +47,7 @@ EntropyGMM_R <- function(data, pro, mean, sigma, wts = NULL, ...)
       cholsigma[,,k] <- chol(sigma[,,k])
     par$variance$cholsigma <- cholsigma
   }
+  
   # component densities
   cden <- cdens(modelName = modelName, parameters = par, 
                 data = data, logarithm = TRUE)
@@ -58,10 +59,15 @@ EntropyGMM_R <- function(data, pro, mean, sigma, wts = NULL, ...)
   # log-densities
   maxlog <- apply(cden, 1, max)
   cden <- sweep(cden, 1, FUN = "-", STATS = maxlog)
-  logdens <- log(apply(exp(cden), 1, sum)) + maxlog
+  logden <- log(apply(exp(cden), 1, sum)) + maxlog
   # entropy
-  h <- -sum(rowSums(sweep(z, MARGIN = 1,  FUN = "*", STATS = logdens))*wts)
-    
+  h <- -sum(rowSums(sweep(z, MARGIN = 1,  FUN = "*", STATS = logden))*wts)
+
+  # or shorter version
+  # logden <- dens(modelName = modelName, parameters = par, 
+  #                data = data, logarithm = TRUE)
+  # h <- -sum(logden*wts)
+
   return(h)
 }
 

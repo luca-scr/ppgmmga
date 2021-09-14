@@ -34,5 +34,5 @@ vignette("ppgmmga")
 
 ## References
 
-Scrucca, L. and Serafini, A. (2019) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. *Journal of Computational and Graphical Statistics*, DOI: 10.1080/10618600.2019.1598871 
+Scrucca, L. and Serafini, A. (2019) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. *Journal of Computational and Graphical Statistics*, 28:4, 847–860. DOI: 10.1080/10618600.2019.1598871 
 URL https://doi.org/10.1080/10618600.2019.1598871

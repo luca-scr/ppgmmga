@@ -6,17 +6,20 @@ citEntry(entry = "Article",
                             person(given="Alessio", family="Serafini")),
   journal      = "Journal of Computational and Graphical Statistics",
   year         = "2019",
-  # volume       = "53",
-  # number       = "4",
-  # pages        = "1--37",
+  volume       = "28",
+  number       = "4",
+  pages        = "847–-860",
   doi          = "10.1080/10618600.2019.1598871",
-  # url          = "https://doi.org/10.1080/10618600.2019.1598871",
+  url          = "https://doi.org/10.1080/10618600.2019.1598871",
   #
   textVersion  =
   paste("Scrucca, L. and Serafini, A. (2019).",
         "Projection pursuit based on Gaussian mixtures and evolutionary algorithms.",
         "Journal of Computational and Graphical Statistics",
+        "28:4, 847–860",
         "DOI: 10.1080/10618600.2019.1598871",
         "URL https://doi.org/10.1080/10618600.2019.1598871"
         )
 )
+
+Scrucca, L. and Serafini, A. (2019) Projection pursuit based on Gaussian mixtures and evolutionary algorithms. \emph{Journal of Computational and Graphical Statistics}, . DOI: 10.1080/10618600.2019.1598871 

@@ -12,7 +12,6 @@ FIXME: Check these declarations against the C/Fortran source code.
 */
 
 /* .Call calls */
-extern SEXP _ppgmmga_encode(SEXP, SEXP);
 extern SEXP _ppgmmga_encodebasis(SEXP, SEXP, SEXP);
 extern SEXP _ppgmmga_EntropyGauss(SEXP, SEXP);
 extern SEXP _ppgmmga_EntropyGMM(SEXP, SEXP, SEXP, SEXP);
@@ -25,7 +24,6 @@ extern SEXP _ppgmmga_logsumexp(SEXP);
 extern SEXP _ppgmmga_orth(SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_ppgmmga_encode",          (DL_FUNC) &_ppgmmga_encode,          2},
     {"_ppgmmga_encodebasis",     (DL_FUNC) &_ppgmmga_encodebasis,     3},
     {"_ppgmmga_EntropyGauss",    (DL_FUNC) &_ppgmmga_EntropyGauss,    2},
     {"_ppgmmga_EntropyGMM",      (DL_FUNC) &_ppgmmga_EntropyGMM,      4},
