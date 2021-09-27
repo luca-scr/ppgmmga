@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // LinTransf
 List LinTransf(arma::mat mean, arma::cube sigma, arma::mat B, arma::mat Z, int G, int d);
 RcppExport SEXP _ppgmmga_LinTransf(SEXP meanSEXP, SEXP sigmaSEXP, SEXP BSEXP, SEXP ZSEXP, SEXP GSEXP, SEXP dSEXP) {

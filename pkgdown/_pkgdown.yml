@@ -5,7 +5,7 @@
 #
 # Usage:
 # pkgdown::build_site()
-# system("open ~/R/mclust-org/howto_update.md")
+# file.edit("~/R/mclust-org/howto_update.md")
 # 
 
 title: ppgmmga
