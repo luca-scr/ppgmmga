@@ -5,7 +5,7 @@
 plot.ppgmmga <- function(x, class = NULL,
                          dim = seq(x$d),
                          drawAxis = TRUE,
-                         bins = nclass.Sturges,
+                         bins = nclass.numpy,
                          ...)
 {
   stopifnot(inherits(x, "ppgmmga"))
@@ -28,13 +28,13 @@ plot.ppgmmga <- function(x, class = NULL,
   switch(d,
   "1" = # 1D case ----
   { 
-    gg <- ggplot(Zpp, aes_string(x = znames[1])) +
-      geom_rug(alpha = 1/2)
+    gg <- ggplot(Zpp, aes(x = .data[[znames[1]]])) +
+      geom_rug(alpha = 0.5)
     if(!is.null(class.name))
     {
       gg <- gg + 
-        geom_histogram(aes_string(y = "..density..",
-                                  fill = "class", colour = "class"),
+        geom_histogram(aes(y = after_stat(density),
+                           fill = class, colour = class),
                        position = "identity",
                        alpha = 0.6,
                        bins = if(is.function(bins)) bins(Zpp[,1])
@@ -47,7 +47,7 @@ plot.ppgmmga <- function(x, class = NULL,
     } else
     {
       gg <- gg +
-        geom_histogram(aes_string(y = "..density.."),
+        geom_histogram(aes(y = after_stat(density)),
                        position = "identity",
                        alpha = 0.6,
                        col = "white",
@@ -60,14 +60,15 @@ plot.ppgmmga <- function(x, class = NULL,
   },
   "2" = # 2D case ----
   { 
-    gg <- ggplot(Zpp, aes_string(x = znames[1], y = znames[2]))
+    gg <- ggplot(Zpp, aes(x = .data[[znames[1]]], 
+                          y = .data[[znames[2]]]))
     if(!is.null(class.name))
     {
       gg <- gg +
-        geom_point(cex = 1, aes_string(shape = "class", colour = "class")) +
+        geom_point(cex = 1, aes(shape = class, 
+                                colour = class)) +
         scale_shape_manual(values = rep(ppgmmga.options("classPlotSymbols"),
                                         length = nlevels(class))) + 
-        # scale_colour_tableau("Classic 10") +
         scale_colour_manual(values = rep(ppgmmga.options("classPlotColors"), 
                                          length = nlevels(class))) + 
         labs(shape = class.name, colour = class.name)
@@ -90,11 +91,13 @@ plot.ppgmmga <- function(x, class = NULL,
                        y = .7 * mult * df2$y)
       gg <-  gg + 
         geom_segment(data = df2, 
-                     aes_string(x = 0, y = 0, xend = "x", yend = "y"),
-                     arrow = arrow(length=unit(1/2,"picas")),
+                     aes(x = 0, xend = .data[["x"]], 
+                         y = 0, yend = .data[["y"]]),
+                     arrow = arrow(length = unit(0.5, "picas")),
                      alpha = 0.5, color = "gray30") +
-        geom_text(data = df2, aes_string(x = "x", y = "y", 
-                                         label = "varnames"),
+        geom_text(data = df2, aes(x = .data[["x"]], 
+                                  y = .data[["y"]], 
+                                  label = .data[["varnames"]]),
                   nudge_x = 0.05*diff(range(df2$x))*sign(df2$x),
                   nudge_y = 0.05*diff(range(df2$y))*sign(df2$y),
                   alpha = 0.5, color = "gray30")
@@ -118,5 +121,11 @@ plot.ppgmmga <- function(x, class = NULL,
             symbols = symb, colors = col, ...)
   }
   )
+}
+
+nclass.numpy <- function(x, ...)
+{
+  x <- as.vector(x)
+  max(nclass.Sturges(x), nclass.FD(x))
 }
 

@@ -10,13 +10,13 @@ An R package accompanying the paper *Projection pursuit based on Gaussian mixtur
 
 You can install the released version of `ppgmmga` from CRAN:
 
-```{r}
+```
 install.packages("ppgmmga")
 ```
 
 or the development version from GitHub:
 
-```{r}
+```
 # install.packages("devtools")
 devtools::install_github("luca-scr/ppgmmga", build = TRUE, build_opts = c("--no-resave-data", "--no-manual"))
 ```
@@ -27,10 +27,9 @@ The methodology implemented in the package is describe in the paper referenced b
 
 Usage of the main functions and some examples are included in the vignette **A quick tour of ppgmmga**, which is available as
 
-```{r}
+```
 vignette("ppgmmga")
 ```
-
 
 ## References
 

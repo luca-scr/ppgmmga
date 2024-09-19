@@ -11,7 +11,7 @@ A Projection Pursuit (PP) method for dimension reduction seeking "interesting" d
 \usage{
 ppgmmga(data, 
         d, 
-        approx = c("none", "UT", "VAR", "SOTE"), 
+        approx = c("UT", "VAR", "SOTE", "none"), 
         center = TRUE, 
         scale = TRUE, 
         GMM = NULL, 
@@ -22,14 +22,18 @@ ppgmmga(data,
 }
 \arguments{
   \item{data}{A \eqn{n x p} matrix containing the data with rows corresponding to observations and columns corresponding to variables. }
+  
   \item{d}{An integer specifying the dimension of the subspace onto which the data are projected and visualised.}
+  
   \item{approx}{A string specifying the type of computation to perform to obtain the negentropy for GMMs. Possible values are:
   \tabular{ll}{
-\code{"none"} \tab for exact calculation (no approximation by default). \cr
-\code{"UT"} \tab for Unscented Trasformation approximation. \cr
-\code{"VAR"} \tab for VARiational approximation. \cr
-\code{"SOTE"} \tab for Second Order Taylor Expansion approximation.}
-}
+    \code{"UT"} \tab = Unscented Trasformation approximation (default); \cr
+    \code{"VAR"} \tab = VARiational approximation; \cr
+    \code{"SOTE"} \tab = Second Order Taylor Expansion approximation; \cr
+    \code{"none"} \tab = exact calculation (no approximation, experimental).
+    }
+  }
+  
   \item{center}{A logical value indicating whether or not the data are centred. By default is set to \code{TRUE}.}
   
   \item{scale}{A logical value indicating whether or not the data are scaled. By default is set to \code{TRUE}.}
@@ -38,9 +42,10 @@ ppgmmga(data,
   
   \item{gatype}{A string specifying the type of genetic algoritm to be used to maximised the negentropy. Possible values are:
   \tabular{ll}{
-\code{"ga"} \tab for simple genetic algorithm (\code{\link{ga}}). \cr
-\code{"gaisl"} \tab for island genetic algorithm (\code{\link{gaisl}}). \cr}
-}
+    \code{"ga"} \tab = simple genetic algorithm (\code{\link{ga}}); \cr
+    \code{"gaisl"} \tab = island genetic algorithm (\code{\link{gaisl}}).
+    }
+  }
   
   \item{options}{A list of options containing all the important arguments to pass to \code{\link{densityMclust}} function of the \pkg{mclust} package, and to \code{\link{ga}} function of the \pkg{GA} package. See \code{\link{ppgmmga.options}} for the available options. Note that by setting the \code{options} argument does not change the global options provided by \code{ppgmmga.options}, but only the options for a single call to \code{ppgmmga}.}
   
@@ -121,6 +126,6 @@ plot(PP3D, Class)
 # A rotating 3D plot can be obtained using:
 # if(!require("msir")) install.packages("msir")
 # msir::spinplot(PP3D$Z, markby = Class,
-#                col.points = ggthemes::tableau_color_pal("Classic 10")(3))
+#                col.points = ppgmmga.options("classPlotColors")[1:3])
 }
 }

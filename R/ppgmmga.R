@@ -55,6 +55,7 @@ ppgmmga <- function(data,
                          G = options$G,
                          initialization = list(hcPairs = hc(Z, use = options$initMclust)),
                          verbose = verbose, 
+                         plot = FALSE,
                          ...)
   } else
   { 

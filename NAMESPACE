@@ -5,9 +5,9 @@ importFrom("Rcpp", sourceCpp)
 #import("RcppArmadillo")
 importFrom("stats", "prcomp")
 
-import("mclust", "GA", "ggplot2", "ggthemes")
-importFrom("grDevices", "nclass.Sturges")
-importFrom("stats", "princomp", "qchisq", "qnorm")
+import("mclust", "GA", "ggplot2")
+importFrom("grDevices", "nclass.Sturges", "nclass.FD")
+importFrom("stats", "princomp", "qchisq", "qnorm", "density")
 importFrom("utils", "packageVersion")
 importFrom("cli", "rule")
 importFrom("crayon", "bold")
@@ -15,7 +15,8 @@ importFrom("crayon", "bold")
 export(ppgmmga, print.ppgmmga, summary.ppgmmga,
        print.summary.ppgmmga, plot.ppgmmga)
 
-export(EntropyGMM, EntropyUT, EntropyVAR, EntropySOTE, EntropyMC, EntropyGauss, logsumexp)
+export(EntropyGMM, EntropyUT, EntropyVAR, EntropySOTE, EntropyMC, 
+       EntropyGauss, logsumexp, nclass.numpy)
 
 S3method("print", "ppgmmga")
 S3method("summary", "ppgmmga")

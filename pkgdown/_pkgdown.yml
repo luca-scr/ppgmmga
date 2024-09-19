@@ -5,6 +5,7 @@
 #
 # Usage:
 # pkgdown::build_site()
+# system("rm -rf ~/R/mclust-org/ppgmmga; mv ~/R/ppgmmga/docs ~/R/mclust-org/ppgmmga")
 # file.edit("~/R/mclust-org/howto_update.md")
 # 
 
@@ -13,25 +14,35 @@ title: ppgmmga
 url: https://mclust-org.github.io/ppgmmga
 
 template:
-  params:
-    bootswatch: cosmo
+  bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    primary: "#121212"
+    code_font: {google: "JetBrains Mono"}
+  theme: monochrome
 
 navbar:
-  left:
-    - text: "Vignette"
+  structure:
+    left:  [vignette, reference, news]
+    right: [home]
+  components:
+    vignette:
+      text: "Vignette"
       href: articles/ppgmmga.html
-    - text: "Reference"
+    reference:
+      text: "Reference"
       href: reference/index.html
-    - text: "News"
+    news:
+      text: "News"
       href: news/index.html
-  right:
-    - text: "mclust-org"
+    home:
+      text: "mclust-org"
       icon: fa-home
       href: https://mclust-org.github.io
-
+     
 figures:
   dev: grDevices::png
-  dpi: 72
+  dpi: 96
   dev.args: []
   fig.ext: png
   fig.width: 7

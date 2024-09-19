@@ -50,7 +50,6 @@ data("banknote")
 X <- banknote[,-1]
 Class <- banknote$Status
 table(Class)
-Class_color <- ggthemes::tableau_color_pal("Classic 10")(2)
 clPairs(X, classification = Class, 
         symbols = ppgmmga.options("classPlotSymbols"),
         colors = ppgmmga.options("classPlotColors"))
@@ -129,16 +128,18 @@ plot(PP3D, dim = c(1,3), class = Class)
 if(!require("msir")) install.packages("msir")
 msir::spinplot(PP3D$Z, markby = Class, 
                pch.points = c(20,17),
-               col.points = Class_color)
+               col.points = ppgmmga.options("classPlotColors")[1:2])
 ```
 
-<br><br>
+<br>
 
 # References
 
-```{r, echo=FALSE, results='asis'}
-print(citation("ppgmmga"), style = "text")
-```
+Scrucca L, Serafini A (2019). 
+"Projection pursuit based on Gaussian mixtures and evolutionary algorithms." 
+*Journal of Computational and Graphical Statistics*, 28(4), 847–860.
+<https://doi.org/10.1080/10618600.2019.1598871>.
+
 
 ----
 

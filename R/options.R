@@ -27,7 +27,12 @@
   # ppgmmga
   orthDecomp = "QR",
   classPlotSymbols = c(16, 0, 17, 3, 15, 4, 1, 8, 2, 7, 5, 9, 6, 10, 11, 18, 12, 13, 14),
-  classPlotColors = tableau_color_pal(palette = "Classic 10")(10)
+  # classPlotColors = tableau_color_pal(palette = "Classic 10")(10)
+  classPlotColors = c(# ggthemes::tableau_color_pal("Classic 10")(4)
+                      "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
+                      # ggthemes::tableau_color_pal("Tableau 20")(20)[c(10,2,4,6,11,8)]
+                      "#86BCB6", "#A0CBE8", "#FFBE7D", "#8CD17D", 
+                      "#E15759", "#F1CE63")
 )
 
 ppgmmga.options <- function(...)
